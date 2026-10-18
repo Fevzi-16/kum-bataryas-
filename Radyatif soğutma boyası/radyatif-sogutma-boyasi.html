@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'sha256-2UKJMpY2JxuTBeSgVpJfgBno9SLvuAlj+6m/RsLqVZk=' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-fbb/mssFaNpmXQz0RZTOb7rovdxnqvdb43Abaq782xM='; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>SERİNBOYA Radyatif Soğutma</title>
+<meta name="description" content="Yerli barit ve kalsitle düşük maliyetli radyatif soğutma boyası ve İstanbul'da çatı testi: TÜBİTAK proje önerisi, etkileşimli enerji dengesi simülasyonu ve spektrum karşılaştırması.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F2F4F6; --surface:#FAFBFC; --surface-2:#E4E8EC;
+  --ink:#15202B; --ink-2:#4A5866; --line:#CDD4DB;
+  --accent:#2348B5; --on-accent:#FFFFFF; --hot:#B4501A;
+  --s-local:#2348B5; --s-pure:#5E86D6; --s-caco3:#0F7F72; --s-tio2:#A86A12; --s-grey:#6B7480;
+  --radius:4px;
+  --font:"Instrument Sans", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E141B; --surface:#151D26; --surface-2:#1E2833;
+    --ink:#E6EBF0; --ink-2:#9DAAB7; --line:#2C3846;
+    --accent:#86A6FF; --on-accent:#0E141B; --hot:#F0965A;
+    --s-local:#86A6FF; --s-pure:#B9CBFF; --s-caco3:#4CC7B6; --s-tio2:#E2B04F; --s-grey:#9AA3AE;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E141B; --surface:#151D26; --surface-2:#1E2833;
+  --ink:#E6EBF0; --ink-2:#9DAAB7; --line:#2C3846;
+  --accent:#86A6FF; --on-accent:#0E141B; --hot:#F0965A;
+  --s-local:#86A6FF; --s-pure:#B9CBFF; --s-caco3:#4CC7B6; --s-tio2:#E2B04F; --s-grey:#9AA3AE;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+@media (min-width:768px){.wrap{padding:0 32px}}
+.skip{position:absolute;left:-9999px;top:8px;background:var(--accent);color:var(--on-accent);padding:8px 14px;border-radius:var(--radius);z-index:30}
+.skip:focus{left:16px}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:64px}
+.brand{font-weight:700;font-stretch:78%;font-size:20px;letter-spacing:.01em;text-decoration:none;white-space:nowrap}
+.nav ul{display:none;list-style:none;margin:0 0 0 auto;padding:0;gap:20px}
+.nav ul a{text-decoration:none;color:var(--ink-2);font-size:15px;padding:10px 0}
+.nav ul a:hover{color:var(--ink)}
+@media (min-width:980px){.nav ul{display:flex}}
+.theme-btn{margin-left:auto;min-height:44px;padding:0 14px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:var(--radius);font:500 14px var(--font);cursor:pointer}
+@media (min-width:980px){.theme-btn{margin-left:8px}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:var(--radius);font:600 16px var(--font);text-decoration:none;white-space:nowrap;cursor:pointer;border:1px solid transparent;transition:transform .15s ease,background-color .2s ease}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{background:color-mix(in srgb,var(--accent) 86%,var(--ink))}
+.btn-ghost{border-color:var(--ink-2);color:var(--ink);background:transparent}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn-sm{min-height:44px;padding:0 16px;font-size:15px}
+
+/* hero */
+.hero{padding:36px 0 56px}
+.hero .wrap{display:grid;gap:32px;align-items:center}
+@media (min-width:960px){.hero{padding:56px 0 72px}.hero .wrap{grid-template-columns:.9fr 1.1fr;gap:56px}}
+h1{font-size:clamp(2.1rem,4.2vw,3.4rem);line-height:1.04;letter-spacing:-.02em;font-weight:700;font-stretch:82%;margin:0 0 20px;text-wrap:balance}
+.lede{font-size:1.15rem;color:var(--ink-2);max-width:44ch;margin:0 0 28px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.roof-fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.roof-fig canvas{display:block;width:100%;height:auto;aspect-ratio:16/10;border-radius:2px}
+.roof-ctrl{display:grid;grid-template-columns:1fr auto;gap:10px 14px;align-items:center;margin-top:14px}
+.roof-ctrl label{font-size:14px;color:var(--ink-2)}
+.roof-ctrl .clock{font:500 15px var(--mono);text-align:right}
+.roof-ctrl input{grid-column:1/-1}
+.roof-read{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0 0;padding:14px 0 0;border-top:1px solid var(--line)}
+.roof-read div{min-width:0}
+.roof-read dt{font-size:13px;color:var(--ink-2);line-height:1.3}
+.roof-read dd{margin:4px 0 0;font:500 clamp(1.05rem,2vw,1.35rem) var(--mono)}
+.roof-read dd small{display:block;font-size:12.5px;color:var(--ink-2)}
+.roof-read .cool{color:var(--accent)} .roof-read .hot{color:var(--hot)}
+.roof-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;font-size:13px;color:var(--ink-2);margin-top:10px}
+.roof-meta .play{margin-left:auto}
+
+/* sections */
+section{padding:72px 0;border-top:1px solid var(--line);scroll-margin-top:64px}
+@media (min-width:960px){section{padding:96px 0}}
+h2{font-size:clamp(1.7rem,3.3vw,2.6rem);line-height:1.08;letter-spacing:-.015em;font-weight:700;font-stretch:85%;margin:0 0 14px;max-width:26ch;text-wrap:balance}
+h3{font-size:1.2rem;line-height:1.25;margin:0 0 8px;font-weight:650}
+.intro{color:var(--ink-2);max-width:64ch;margin:0 0 40px}
+p{margin:0 0 14px}
+.note{font-size:14px;color:var(--ink-2);max-width:70ch}
+
+/* how */
+.process{display:grid;gap:0;margin:0;padding:0;list-style:none;counter-reset:step}
+.process li{padding:22px 0;border-top:2px solid var(--line)}
+.process li::before{counter-increment:step;content:counter(step);font:500 14px var(--mono);color:var(--accent);display:block;margin-bottom:6px}
+.process li p{color:var(--ink-2);margin:0;max-width:42ch}
+@media (min-width:860px){.process{grid-template-columns:repeat(3,1fr);gap:32px}}
+.balance{margin-top:48px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:grid;gap:20px}
+@media (min-width:900px){.balance{grid-template-columns:1.1fr 1fr;gap:40px;padding:32px}}
+.eq{font:500 clamp(1rem,2vw,1.3rem)/1.7 var(--mono);margin:0;overflow-x:auto}
+.eq span{display:block}
+.eq .main{margin-bottom:8px;color:var(--accent);white-space:nowrap}
+.balance p{color:var(--ink-2);margin:0 0 10px}
+
+/* spectrum */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;padding:0;border:0}
+.chips legend{font-weight:600;font-size:15px;margin-bottom:10px;padding:0}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.chip label{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1px solid var(--line);border-radius:999px;font-size:14.5px;cursor:pointer;background:var(--surface);color:var(--ink-2);transition:background-color .15s ease,color .15s ease,border-color .15s ease}
+.chip label i{width:14px;height:3px;border-radius:2px;background:currentColor;opacity:.35}
+.chip input:checked + label{color:var(--ink);border-color:var(--ink-2)}
+.chip input:checked + label i{opacity:1}
+.chip input:focus-visible + label{outline:3px solid var(--accent);outline-offset:2px}
+.spec-fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+.spec-scroll{overflow-x:auto}
+.spec-fig svg{display:block;width:100%;min-width:640px;height:auto}
+.spec-fig figcaption{font-size:13.5px;color:var(--ink-2);margin-top:10px;max-width:80ch}
+.spec-table{width:100%;border-collapse:collapse;margin-top:24px;font-size:15px}
+.spec-table th,.spec-table td{text-align:left;padding:10px 12px 10px 0;border-bottom:1px solid var(--line)}
+.spec-table th{font-weight:600;color:var(--ink-2);font-size:13.5px}
+.spec-table td.num{white-space:nowrap}
+.swatch{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:8px;vertical-align:-1px}
+
+/* timeline */
+.timeline{list-style:none;margin:0;padding:0;display:grid}
+.timeline li{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:18px 0 18px 20px;border-left:2px solid var(--line);margin-left:6px;position:relative}
+.timeline li::before{content:"";position:absolute;left:-7px;top:25px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--ink-2)}
+.timeline li.gap::before{background:var(--accent);border-color:var(--accent)}
+.timeline time{font:500 15px var(--mono);color:var(--ink-2);padding-top:2px}
+.timeline p{margin:0;color:var(--ink-2);font-size:15.5px}
+.timeline li.gap h3{color:var(--accent)}
+@media (min-width:1000px){
+  .timeline{grid-template-columns:repeat(6,1fr);border-top:2px solid var(--line)}
+  .timeline li{display:block;border-left:0;margin-left:0;padding:28px 18px 0 0}
+  .timeline li::before{top:-7px;left:0}
+  .timeline time{display:block;margin-bottom:6px}
+}
+.callout{margin-top:48px;display:grid;gap:24px;padding:28px 0 0;border-top:2px solid var(--accent)}
+@media (min-width:900px){.callout{grid-template-columns:1fr 1.3fr;gap:48px}}
+.callout h3{font-size:1.5rem;font-stretch:88%;line-height:1.15}
+.callout ul{margin:0;padding-left:1.1em;color:var(--ink-2)}
+.callout li{margin-bottom:10px}
+
+/* simulator */
+.sim{display:grid;gap:32px}
+@media (min-width:1000px){.sim{grid-template-columns:340px 1fr;gap:48px}}
+.controls{display:grid;gap:20px;align-content:start}
+.field label{display:flex;justify-content:space-between;gap:12px;font-weight:600;font-size:15px;margin-bottom:4px}
+.field output{font:500 14px var(--mono);color:var(--ink)}
+.field .help{font-size:13px;color:var(--ink-2);margin:2px 0 0}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:32px;cursor:pointer}
+select,input[type=number]{width:100%;min-height:44px;font:500 16px var(--font);color:var(--ink);background:var(--surface);border:1px solid var(--ink-2);border-radius:var(--radius);padding:0 12px}
+select{cursor:pointer}
+.results{min-width:0}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:20px 24px;margin:0 0 20px}
+@media (min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat dt{font-size:13px;color:var(--ink-2);line-height:1.35}
+.stat dd{margin:4px 0 0;font:500 clamp(1.45rem,2.6vw,2rem) var(--mono);letter-spacing:-.02em}
+.stat dd small{font-size:.5em;color:var(--ink-2);letter-spacing:0;margin-left:3px}
+.stat dd.cool{color:var(--accent)} .stat dd.hot{color:var(--hot)}
+.verdict{background:var(--surface-2);border-radius:var(--radius);padding:14px 16px;margin:0 0 28px;max-width:72ch}
+.day{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.day h3{margin-bottom:4px}
+.day .sub{font-size:14px;color:var(--ink-2);margin:0 0 14px}
+.day canvas{display:block;width:100%;height:auto;aspect-ratio:2/1}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;list-style:none;margin:10px 0 0;padding:0;font-size:13.5px;color:var(--ink-2)}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;margin-right:6px;vertical-align:4px}
+.legend .dash{background:repeating-linear-gradient(90deg,var(--ink-2) 0 4px,transparent 4px 7px)}
+.save{display:grid;gap:16px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.save-in{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media (min-width:760px){.save-in{grid-template-columns:repeat(5,1fr)}}
+.save-in label{display:block;font-size:13.5px;font-weight:600;margin-bottom:4px}
+.save-out{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 24px;margin:0}
+@media (min-width:760px){.save-out{grid-template-columns:repeat(3,1fr)}}
+
+/* materials */
+.tbl-wrap{overflow-x:auto;margin:0 0 48px}
+.mat{width:100%;min-width:640px;border-collapse:collapse;font-size:15.5px}
+.mat th,.mat td{text-align:left;vertical-align:top;padding:14px 16px 14px 0;border-bottom:1px solid var(--line)}
+.mat thead th{font-size:14px;color:var(--ink-2);font-weight:600;border-bottom:2px solid var(--ink-2)}
+.mat tbody th{font-weight:600;width:22%}
+.mat .ours{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.mat td.ours,.mat th.ours{padding-left:12px}
+.ores{display:grid;gap:32px}
+@media (min-width:900px){.ores{grid-template-columns:1fr 1fr 1.2fr;gap:40px}}
+.ores h3{display:flex;align-items:baseline;gap:10px}
+.ores h3 .num{font-size:14px;color:var(--ink-2);font-weight:400}
+.ores p{color:var(--ink-2);margin-bottom:8px}
+.ores .where{font-size:14.5px}
+.question{background:var(--accent);color:var(--on-accent);border-radius:var(--radius);padding:24px}
+.question p{color:inherit;font-size:1.12rem;line-height:1.45;margin:0 0 12px}
+.question small{display:block;opacity:.85;font-size:14px}
+
+/* originality bento */
+.bento{display:grid;gap:16px}
+@media (min-width:900px){.bento{grid-template-columns:1.3fr 1fr 1fr;grid-template-rows:auto auto}}
+.bento article{border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:var(--surface)}
+.bento article p{color:var(--ink-2);margin:0}
+.bento .lead{background:var(--surface-2)}
+@media (min-width:900px){.bento .lead{grid-row:1/3;display:flex;flex-direction:column;justify-content:flex-end;padding:32px}}
+.bento .lead h3{font-size:1.6rem;font-stretch:85%;line-height:1.12;margin-bottom:12px}
+.bento .tint{background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+.bento .wide{grid-column:auto}
+@media (min-width:900px){.bento .wide{grid-column:2/4}}
+
+/* gantt */
+.gantt-wrap{overflow-x:auto}
+.gantt{min-width:720px;display:grid;grid-template-columns:minmax(220px,1.2fr) repeat(24,1fr);row-gap:10px;align-items:center;font-size:14.5px}
+.gantt .hd{font:500 12px var(--mono);color:var(--ink-2);text-align:center;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.gantt .hd.blank{border-bottom:1px solid var(--line)}
+.gantt .lbl{padding-right:16px;line-height:1.3}
+.gantt .lbl b{font-family:var(--mono);font-weight:500;color:var(--accent);margin-right:6px}
+.gantt .bar{height:26px;border-radius:var(--radius);background:color-mix(in srgb,var(--accent) 22%,var(--surface));border:1px solid var(--accent);display:flex;align-items:center;padding:0 8px;font:500 12px var(--mono);color:var(--ink);white-space:nowrap;overflow:hidden}
+.gantt .bar.field{background:var(--accent);color:var(--on-accent)}
+.short{margin-top:28px;padding:18px 20px;border-left:3px solid var(--accent);background:var(--surface);max-width:80ch}
+.short p{margin:0;color:var(--ink-2)}
+
+/* risks */
+.risks{display:grid;gap:0;border-top:1px solid var(--line);max-width:900px}
+.risks details{border-bottom:1px solid var(--line)}
+.risks summary{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;min-height:56px;padding:12px 0;cursor:pointer;list-style:none;font-weight:600}
+.risks summary::-webkit-details-marker{display:none}
+.risks summary::after{content:"+";font:400 22px var(--mono);color:var(--ink-2);grid-column:3}
+.risks details[open] summary::after{content:"-"}
+.risks summary{grid-template-columns:1fr auto auto}
+.lvl{font:500 12.5px var(--mono);padding:3px 8px;border-radius:var(--radius);border:1px solid var(--line);color:var(--ink-2);white-space:nowrap}
+.lvl.high{border-color:var(--hot);color:var(--hot)}
+.risks details p{margin:0 0 18px;color:var(--ink-2);max-width:70ch}
+
+/* checklist */
+.close-grid{display:grid;gap:40px}
+@media (min-width:960px){.close-grid{grid-template-columns:1fr 1.1fr;gap:64px}}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.checklist label{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;padding:10px 0;cursor:pointer;min-height:44px}
+.checklist input{width:20px;height:20px;margin:3px 0 0;accent-color:var(--accent);cursor:pointer}
+.checklist input:checked + span{color:var(--ink-2);text-decoration:line-through;text-decoration-color:var(--line)}
+.progress{font:500 14px var(--mono);color:var(--ink-2);margin:0 0 10px}
+.close-grid h2{max-width:18ch}
+.close-grid .lede{max-width:48ch}
+
+footer{border-top:1px solid var(--line);padding:32px 0 48px;font-size:14px;color:var(--ink-2)}
+footer p{max-width:80ch}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#icerik">İçeriğe geç</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#">SERİNBOYA</a>
+    <nav aria-label="Bölümler">
+      <ul>
+        <li><a href="#nasil">Nasıl çalışır</a></li>
+        <li><a href="#spektrum">Spektrum</a></li>
+        <li><a href="#literatur">Literatür</a></li>
+        <li><a href="#simulasyon">Simülasyon</a></li>
+        <li><a href="#hammadde">Hammadde</a></li>
+        <li><a href="#plan">Plan</a></li>
+        <li><a href="#basvuru">Başvuru</a></li>
+      </ul>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Renk temasını değiştir">Tema: otomatik</button>
+  </div>
+</header>
+
+<main id="icerik">
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Güneşin altında, havadan daha soğuk kalan çatı boyası</h1>
+      <p class="lede">Türkiye'nin kendi barit ve kalsitiyle düşük maliyetli radyatif soğutma boyası ve İstanbul'da çatı testi için TÜBİTAK proje önerisi.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#simulasyon">Simülasyonu aç</a>
+        <a class="btn btn-ghost" href="RADYATIF_SOGUTMA_BOYASI_PROJE.md">Proje taslağını oku</a>
+      </div>
+    </div>
+    <figure class="roof-fig">
+      <canvas id="roofCanvas" width="800" height="500" role="img" aria-label="İstanbul'da tipik bir temmuz gününde üç çatı yüzeyinin model sıcaklıkları; kesikli çizgi hava sıcaklığını gösterir."></canvas>
+      <div class="roof-ctrl">
+        <label for="hour">Günün saati (İstanbul, tipik temmuz günü)</label>
+        <span class="clock" id="clock">13:00</span>
+        <input type="range" id="hour" min="0" max="24" step="0.25" value="13">
+      </div>
+      <dl class="roof-read" id="roofRead"></dl>
+      <div class="roof-meta">
+        <span id="roofEnv">Hava 28 °C, güneş 850 W/m²</span>
+        <button class="btn btn-ghost btn-sm play" id="playBtn" type="button" aria-pressed="false">Günü oynat</button>
+      </div>
+    </figure>
+  </div>
+</div>
+
+<section id="nasil" aria-labelledby="nasil-h">
+  <div class="wrap">
+    <h2 id="nasil-h">Isıyı doğrudan uzaya gönderen bir yüzey</h2>
+    <p class="intro">Atmosfer 8-13 µm aralığında kızılötesi ışığa büyük ölçüde geçirgendir. Bu pencereden yayılan ısı, yaklaşık 3 K sıcaklığındaki uzaya kaçar. Güneşi yansıtıp bu pencerede güçlü yayan bir boya, elektrik harcamadan ortam sıcaklığının altına inebilir.</p>
+    <ol class="process">
+      <li><h3>Güneşi geri yansıt</h3><p>0,3-2,5 µm aralığında ışığın %95'inden fazlasını yansıtmak gerekir. Öğle güneşinde her 1 puanlık yansıtma kaybı, yüzeye yaklaşık 9 W/m² fazladan ısı demektir.</p></li>
+      <li><h3>Atmosfer penceresinde yay</h3><p>Sülfat ve karbonat bağları, akrilik bağlayıcıyla birlikte 8-13 µm aralığında yüksek yayıcılık sağlar. Isı atmosfere takılmadan uzaya gider.</p></li>
+      <li><h3>Çevreden daha soğuk kal</h3><p>Uzaya giden ısı güneşten ve havadan gelenden fazlaysa yüzey ortamın altına iner. Bina daha az ısı alır, klima daha az çalışır.</p></li>
+    </ol>
+    <div class="balance">
+      <p class="eq" aria-label="Enerji dengesi denklemi">
+        <span class="main">P<sub>net</sub> = P<sub>ışınım</sub> − P<sub>atmosfer</sub> − P<sub>güneş</sub> − P<sub>taşınım</sub></span>
+        <span>P<sub>ışınım</sub> = ε σ T<sub>yüzey</sub><sup>4</sup></span>
+        <span>P<sub>atmosfer</sub> = ε ε<sub>gök</sub> σ T<sub>ortam</sub><sup>4</sup></span>
+        <span>P<sub>güneş</sub> = (1 − R) G</span>
+        <span>P<sub>taşınım</sub> = h (T<sub>ortam</sub> − T<sub>yüzey</sub>)</span>
+      </p>
+      <div>
+        <p><strong>R</strong> güneş yansıtması, <strong>ε</strong> kızılötesi yayıcılık, <strong>G</strong> güneş ışınımı, <strong>h</strong> rüzgâra bağlı taşınım katsayısıdır.</p>
+        <p><strong>ε<sub>gök</sub></strong> havadaki neme bağlıdır. Çiğ noktası yükseldikçe atmosfer penceresi kısmen kapanır ve soğutma gücü düşer. Nemli İstanbul bu yüzden zor ama bilimsel olarak değerli bir test sahasıdır.</p>
+        <p class="note">Sayfadaki tüm hesaplar bu denklemle ve Berdahl-Martin (1984) açık gökyüzü yayıcılığı modeliyle yapılır.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="spektrum" aria-labelledby="spek-h">
+  <div class="wrap">
+    <h2 id="spek-h">Beyaz her boya aynı değildir: farkı morötesi yaratır</h2>
+    <p class="intro">Ticari beyaz boyalardaki TiO₂ 400 nm altındaki morötesi ışığı soğurur. BaSO₄ ve CaCO₃'ün bant aralığı ~6 eV olduğundan morötesini de yansıtır. Karşılaştırmak istediğiniz yüzeyleri seçin.</p>
+    <fieldset class="chips" id="chips">
+      <legend>Gösterilecek yüzeyler</legend>
+    </fieldset>
+    <figure class="spec-fig">
+      <div class="spec-scroll"><svg id="specSvg" viewBox="0 0 960 380" role="img" aria-labelledby="specTitle"><title id="specTitle">Solda güneş bölgesinde yansıtma, sağda kızılötesi bölgede yayıcılık eğrileri</title></svg></div>
+      <figcaption>Eğriler literatürdeki tipik davranışa göre çizilmiş şematik eğrilerdir; projede UV-Vis-NIR ve FTIR ölçümleriyle değiştirilecektir. Gri dolgu güneş spektrumunu (5778 K kara cisim yaklaşımı), mavi bant atmosfer penceresini, kesikli eğri 300 K bir yüzeyin ışınımını gösterir.</figcaption>
+    </figure>
+    <div class="tbl-wrap">
+      <table class="spec-table" id="specTable">
+        <thead><tr><th scope="col">Yüzey</th><th scope="col">Güneş ağırlıklı yansıtma (şematik)</th><th scope="col">8-13 µm yayıcılık (şematik)</th><th scope="col">Morötesi (0,3-0,4 µm) yansıtma</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="literatur" aria-labelledby="lit-h">
+  <div class="wrap">
+    <h2 id="lit-h">Malzeme bilinen bir konu. Türkiye'de boya ile saha testi yok.</h2>
+    <p class="intro">Purdue Üniversitesi'nin BaSO₄ boyası 600'den fazla atıf aldı. Türkiye'de başlığında "radiative cooling" geçen yaklaşık 36 yayın var; bunlar çoğunlukla ince film ve optik tasarım üzerine.</p>
+    <ol class="timeline">
+      <li><time>2014</time><div><h3>Fotonik soğutucu</h3><p>Raman ve ark., Nature. Doğrudan güneş altında ortamın ~4,9 °C altı.</p></div></li>
+      <li><time>2017</time><div><h3>Hibrit film</h3><p>Zhai ve ark., Science. Rulo üretilebilir cam katkılı polimer, ~93 W/m².</p></div></li>
+      <li><time>2018</time><div><h3>Gözenekli kaplama</h3><p>Mandal ve ark., Science. Boya gibi sürülen polimer, R ≈ 0,96.</p></div></li>
+      <li><time>2020</time><div><h3>CaCO₃ boya</h3><p>Li ve ark., Cell Rep. Phys. Sci. Ticari boyaya benzer formül, R ≈ 0,955.</p></div></li>
+      <li><time>2021</time><div><h3>BaSO₄ boya</h3><p>Li ve ark., ACS AMI. R = 0,981, ε = 0,95; öğlen ~4,5 °C ortam altı.</p></div></li>
+      <li class="gap"><time>Bugün</time><div><h3>Türkiye: boşluk</h3><p>Yerli pigmentli boya yok, nemli iklimde uzun süreli çatı testi yok.</p></div></li>
+    </ol>
+    <div class="callout">
+      <h3>İstanbul neden zor ve neden değerli?</h3>
+      <ul>
+        <li>Yaz çiğ noktası sık sık 18-20 °C'ye çıkar; gökyüzü yayıcılığı artar ve soğutma gücü kuru iklimlere göre düşer. Bunu aşağıdaki simülasyonda çiğ noktası ayarıyla görebilirsiniz.</li>
+        <li>Kentsel toz ve kirlilik yüzeyi kirletir; yansıtma aylar içinde düşebilir. Bu, literatürde az ölçülmüş bir değişkendir.</li>
+        <li>Yayımlanmış saha testleri ağırlıkla kuru veya ılıman iklimde ve birkaç günlüktür. 6-12 aylık İstanbul verisi doğrudan uygulamaya yönelik bir cevap verir.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="simulasyon" aria-labelledby="sim-h">
+  <div class="wrap">
+    <h2 id="sim-h">Kendi koşullarını dene: boya ortamın altına iner mi?</h2>
+    <p class="intro">Basit bir sürekli rejim enerji dengesi modeli. Numunenin alt yüzeyi yalıtılmış kabul edilir (saha testindeki yalıtımlı kutu gibi). Sonuçlar tahmindir; asıl değerler projede ölçülecektir.</p>
+    <div class="sim">
+      <form class="controls" id="simForm" aria-label="Simülasyon ayarları" novalidate>
+        <div class="field">
+          <label for="preset">Yüzey</label>
+          <select id="preset"></select>
+        </div>
+        <div class="field">
+          <label for="R">Güneş yansıtması R <output id="Rout" for="R"></output></label>
+          <input type="range" id="R" min="0.20" max="0.99" step="0.005">
+        </div>
+        <div class="field">
+          <label for="eps">Pencere yayıcılığı ε <output id="epsOut" for="eps"></output></label>
+          <input type="range" id="eps" min="0.80" max="0.99" step="0.005">
+        </div>
+        <div class="field">
+          <label for="G">Güneş ışınımı <output id="Gout" for="G"></output></label>
+          <input type="range" id="G" min="0" max="1100" step="10">
+          <p class="help">İstanbul'da yaz öğlesi yaklaşık 800-900 W/m²; gece 0.</p>
+        </div>
+        <div class="field">
+          <label for="Ta">Hava sıcaklığı <output id="TaOut" for="Ta"></output></label>
+          <input type="range" id="Ta" min="0" max="45" step="0.5">
+        </div>
+        <div class="field">
+          <label for="Tdp">Çiğ noktası (nem) <output id="TdpOut" for="Tdp"></output></label>
+          <input type="range" id="Tdp" min="-5" max="26" step="0.5">
+          <p class="help">Kuru iç bölgeler ~5-10 °C, nemli İstanbul yazı ~18-20 °C.</p>
+        </div>
+        <div class="field">
+          <label for="cloud">Bulutluluk <output id="cloudOut" for="cloud"></output></label>
+          <input type="range" id="cloud" min="0" max="1" step="0.05">
+        </div>
+        <div class="field">
+          <label for="wind">Rüzgâr hızı <output id="windOut" for="wind"></output></label>
+          <input type="range" id="wind" min="0" max="6" step="0.25">
+          <p class="help">Rüzgâr yüzeyi havaya yaklaştırır: sıcak yüzeyi soğutur, soğuk yüzeyi ısıtır.</p>
+        </div>
+      </form>
+      <div class="results">
+        <dl class="stats">
+          <div class="stat"><dt>Soğutma gücü (yüzey = hava)</dt><dd id="oP">-</dd></div>
+          <div class="stat"><dt>Denge yüzey sıcaklığı</dt><dd id="oTs">-</dd></div>
+          <div class="stat"><dt>Havaya göre fark</dt><dd id="oDT">-</dd></div>
+          <div class="stat"><dt>Gökyüzü yayıcılığı ε<sub>gök</sub></dt><dd id="oSky">-</dd></div>
+        </dl>
+        <p class="verdict" id="verdict" aria-live="polite"></p>
+        <div class="day">
+          <h3>Tipik İstanbul temmuz günü</h3>
+          <p class="sub">Hava sıcaklığı ve güneş saat saat değişir; nem, bulut ve rüzgâr soldaki ayarlardan alınır.</p>
+          <canvas id="dayCanvas" width="800" height="400" role="img" aria-label="24 saatlik hava sıcaklığı, referans yüzey ve seçili boya için yüzey sıcaklığı eğrileri"></canvas>
+          <ul class="legend">
+            <li><i class="dash"></i>Hava</li>
+            <li><i id="lgRef"></i><span id="lgRefTxt">Referans</span></li>
+            <li><i id="lgSel"></i>Seçili yüzey</li>
+          </ul>
+          <div class="save">
+            <div class="save-in">
+              <div><label for="ref">Karşılaştır</label><select id="ref"><option value="grey">Gri membran</option><option value="tio2" selected>Ticari beyaz</option></select></div>
+              <div><label for="area">Çatı alanı (m²)</label><input type="number" id="area" min="10" max="10000" step="10" value="120" inputmode="numeric"></div>
+              <div><label for="U">Çatı U değeri (W/m²K)</label><input type="number" id="U" min="0.1" max="5" step="0.1" value="1.2" inputmode="decimal"></div>
+              <div><label for="cop">Klima COP</label><input type="number" id="cop" min="1" max="8" step="0.1" value="3" inputmode="decimal"></div>
+              <div><label for="days">Soğutma günü</label><input type="number" id="days" min="1" max="200" step="1" value="100" inputmode="numeric"></div>
+            </div>
+            <dl class="save-out stats">
+              <div class="stat"><dt>Öğlen yüzey farkı</dt><dd id="sNoon">-</dd></div>
+              <div class="stat"><dt>Binaya giren ısıda azalma</dt><dd id="sHeat">-</dd></div>
+              <div class="stat"><dt>Sezonluk klima elektriği tasarrufu</dt><dd id="sElec">-</dd></div>
+            </dl>
+            <p class="note">Kaba tahmin: çatıdan giren ısı U × alan × (yüzey sıcaklığı − 24 °C) ile hesaplanır. Gerçek binada yalıtım, ısıl kütle ve gölgelenme sonucu değiştirir; projede EnergyPlus ile ayrıntılı analiz yapılacaktır.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hammadde" aria-labelledby="ham-h">
+  <div class="wrap">
+    <h2 id="ham-h">Pigment Türkiye'nin toprağında</h2>
+    <p class="intro">Türkiye barit ve kalsitin dünyadaki önde gelen üreticilerinden biri. Bu cevherlerin büyük kısmı sondaj çamuru ve dolgu malzemesi olarak düşük katma değerle satılıyor. Proje aynı cevheri yüksek değerli bir soğutucu pigmente dönüştürmeyi hedefliyor.</p>
+    <div class="tbl-wrap">
+      <table class="mat">
+        <thead><tr><th scope="col">Özellik</th><th scope="col">TiO₂ (ticari beyaz)</th><th scope="col" class="ours">BaSO₄ (barit)</th><th scope="col" class="ours">CaCO₃ (kalsit)</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Bant aralığı</th><td>~3,0 eV, morötesini soğurur</td><td class="ours">~6 eV, morötesini yansıtır</td><td class="ours">~6 eV, morötesini yansıtır</td></tr>
+          <tr><th scope="row">Kırılma indisi</th><td>~2,6, çok örtücü</td><td class="ours">~1,64, yüksek dolgu oranı gerekir</td><td class="ours">~1,49-1,66</td></tr>
+          <tr><th scope="row">Kızılötesi</th><td>Pencerede orta</td><td class="ours">~9 µm fonon rezonansı, pencerede yüksek</td><td class="ours">~7 ve ~11 µm bantları</td></tr>
+          <tr><th scope="row">Kaynak</th><td>Büyük ölçüde ithal</td><td class="ours">Yerli üretim</td><td class="ours">Yerli, çok bol</td></tr>
+          <tr><th scope="row">Literatürdeki boya</th><td>R ≈ 0,80-0,90</td><td class="ours">R = 0,981 (Purdue, 2021)</td><td class="ours">R ≈ 0,955 (Purdue, 2020)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ores">
+      <div>
+        <h3>Barit <span class="num">BaSO₄</span></h3>
+        <p>Bugün ağırlıkla petrol ve gaz sondaj çamuru için kullanılıyor.</p>
+        <p class="where">Başlıca bölgeler: Antalya (Alanya, Gazipaşa), Isparta (Şarkikaraağaç), Muş, Kahramanmaraş, Konya.</p>
+      </div>
+      <div>
+        <h3>Kalsit <span class="num">CaCO₃</span></h3>
+        <p>Mikronize kalsit kâğıt, plastik ve boyada dolgu olarak satılıyor.</p>
+        <p class="where">Başlıca bölgeler: Niğde, Afyonkarahisar, Kırşehir, Balıkesir, Muğla.</p>
+      </div>
+      <div class="question">
+        <p>Doğal cevherdeki demir oksit ve kil yansıtmayı ne kadar düşürür, hangi ucuz zenginleştirme adımı bu farkı kapatır?</p>
+        <small>Laboratuvar çalışmaları yüksek saflıkta ticari pigment kullandı. Safsızlık ile yansıtma arasındaki ilişki projenin asıl bilimsel sorusu.</small>
+      </div>
+    </div>
+    <p class="note">Bölge listesi ön bilgidir; MAPEG, MTA ve USGS verileriyle başvurudan önce doğrulanmalıdır.</p>
+  </div>
+</section>
+
+<section id="ozgun" aria-labelledby="ozgun-h">
+  <div class="wrap">
+    <h2 id="ozgun-h">Projeyi özgün yapan ne?</h2>
+    <div class="bento">
+      <article class="lead"><h3>Yerli cevherden pigment</h3><p>Türkiye kaynaklı barit ve kalsitin radyatif soğutma pigmenti olarak ilk sistematik karakterizasyonu ve safsızlık ile güneş yansıtması arasındaki ilişkinin nicel olarak ortaya konması.</p></article>
+      <article class="tint"><h3>Nemli iklimde uzun saha testi</h3><p>İstanbul'da gerçek bir çatıda, en az bir yaz ve bir kış boyunca, ticari beyaz boya ve çıplak çatıyla yan yana ölçüm.</p></article>
+      <article><h3>Kirlenme ve yaşlanma</h3><p>Kent ortamında yansıtmanın aylık takibi; hızlandırılmış UV ve nem yaşlandırmasıyla karşılaştırma.</p></article>
+      <article><h3>Maliyet odaklı formül</h3><p>Pigment oranı, tane boyu ve bağlayıcının deney tasarımıyla optimizasyonu; m² maliyetinin ticari boyayla kıyası.</p></article>
+      <article class="tint"><h3>Bina ölçeği etki</h3><p>Ölçülen R ve ε ile kalibre edilmiş bina enerji simülasyonu; iki özdeş test kabininde gerçek klima tüketimi.</p></article>
+    </div>
+  </div>
+</section>
+
+<section id="plan" aria-labelledby="plan-h">
+  <div class="wrap">
+    <h2 id="plan-h">24 aylık iş planı</h2>
+    <p class="intro">Saha testi en az bir yaz ve bir kışı kapsayacak şekilde 11. ayda başlar. Koyu çubuk saha kampanyasını gösterir.</p>
+    <div class="gantt-wrap"><div class="gantt" id="gantt" role="table" aria-label="İş paketleri zaman çizelgesi"></div></div>
+    <div class="short"><p><strong>1002-A veya 2209-A için 12 aylık sürüm:</strong> ticari saf BaSO₄ ile birlikte 1 yerli barit ve 1 yerli kalsit numunesi, tek formül ailesi ve tek yaz kampanyası. Bu sonuçlar sonraki 1001 başvurusu için ön veri olur.</p></div>
+  </div>
+</section>
+
+<section id="riskler" aria-labelledby="risk-h">
+  <div class="wrap">
+    <h2 id="risk-h">Riskler ve B planları</h2>
+    <p class="intro">Olumsuz sonuçların çoğu da bulgudur: İstanbul neminde neyin işe yaramadığını göstermek, sahada uygulama yapacaklar için en az olumlu sonuç kadar değerlidir.</p>
+    <div class="risks">
+      <details><summary>Yerli cevherde yüksek demir içeriği, düşük yansıtma <span class="lvl">Orta</span></summary><p>Yıkama, manyetik ayırma ve eleme ile zenginleştirme; yerli ve az miktarda saf pigment karışımı. Safsızlık-yansıtma ilişkisinin kendisi yayımlanabilir bir bulgudur.</p></details>
+      <details><summary>İstanbul neminde gündüz ortam altına inilememesi <span class="lvl">Orta</span></summary><p>Asıl ölçüt ticari beyaz boyaya göre sıcaklık farkıdır. Gece ve kuru günler ayrı raporlanır, nemin etkisi modelle nicelleştirilir.</p></details>
+      <details><summary>Yüksek pigment oranında tozuma veya çatlama <span class="lvl">Orta</span></summary><p>Pigment oranı ve bağlayıcı deney tasarımıyla dengelenir; şeffaf koruyucu üst kat denenir.</p></details>
+      <details><summary>Kirlenmeyle hızlı performans kaybı <span class="lvl high">Yüksek</span></summary><p>Aylık spektral ölçüm ve yıkama deneyi; hidrofobik üst kat seçeneği. Kirlenme eğrisi projenin çıktılarından biridir.</p></details>
+      <details><summary>FTIR ve entegre küre cihazına erişim <span class="lvl">Orta</span></summary><p>Üniversite merkez laboratuvarı veya hizmet alımı; bütçeye hizmet alım kalemi eklenir.</p></details>
+      <details><summary>Kışın istenmeyen soğutma <span class="lvl">Düşük</span></summary><p>Kış verisi ayrıca raporlanır; yıllık net etki bina simülasyonuyla hesaplanır.</p></details>
+    </div>
+  </div>
+</section>
+
+<section id="basvuru" aria-labelledby="bas-h">
+  <div class="wrap close-grid">
+    <div>
+      <h2 id="bas-h">Başvurudan önce yapılacaklar</h2>
+      <p class="lede">İşaretledikleriniz bu tarayıcıda saklanır. İlk adım olarak 1002-A veya 2209-A ile ön veri toplayıp ardından 1001 ile tam projeye geçmek önerilir.</p>
+      <div class="cta-row"><a class="btn btn-ghost" href="RADYATIF_SOGUTMA_BOYASI_PROJE.md">Proje taslağını oku</a></div>
+    </div>
+    <div>
+      <p class="progress" id="progress" aria-live="polite"></p>
+      <ul class="checklist" id="checklist"></ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Bu sayfa bir proje ön taslağıdır. Yansıtma, yayıcılık ve sıcaklık değerleri literatürdeki tipik değerlere ve basitleştirilmiş bir enerji dengesi modeline dayanan tahminlerdir; projede ölçülerek doğrulanacaktır. Künyeler ve Türkiye'deki yayın sayısı başvurudan önce güncel veri tabanı taramasıyla teyit edilmelidir.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+var SIG=5.670374e-8;
+var reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+function $(id){return document.getElementById(id);}
+function fmt(v,d){return v.toLocaleString("tr-TR",{minimumFractionDigits:d,maximumFractionDigits:d});}
+function signed(v,d){var s=fmt(Math.abs(v),d);return (v>0.05?"+":v<-0.05?"−":"")+s;}
+function cssVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function store(k,v){try{if(v===undefined){return localStorage.getItem(k);}localStorage.setItem(k,v);}catch(e){return null;}}
+
+/* ---------- physics ---------- */
+function skyEps(Tdp,cloud){var x=Tdp/100;var e=0.711+0.56*x+0.73*x*x;return Math.min(1,e+(1-e)*0.8*cloud);}
+function hConv(v){return 5.7+3.8*v;}
+function surfT(R,eps,G,TaC,esky,h){
+  var Ta=TaC+273.15,lo=Ta-80,hi=Ta+150,a=eps*esky*SIG*Math.pow(Ta,4),q=(1-R)*G;
+  for(var i=0;i<60;i++){var m=(lo+hi)/2;var f=eps*SIG*Math.pow(m,4)-a+h*(m-Ta)-q;if(f>0)hi=m;else lo=m;}
+  return (lo+hi)/2-273.15;
+}
+function coolP(R,eps,G,TaC,esky){var Ta=TaC+273.15;return eps*SIG*Math.pow(Ta,4)*(1-esky)-(1-R)*G;}
+
+var MATS={
+  local:{name:"Yerli BaSO₄ boya (hedef)",short:"Yerli BaSO₄",R:0.965,eps:0.95,c:"--s-local"},
+  pure:{name:"Saf BaSO₄ boya (Purdue 2021)",short:"Saf BaSO₄",R:0.981,eps:0.95,c:"--s-pure"},
+  caco3:{name:"CaCO₃ boya (Purdue 2020)",short:"CaCO₃",R:0.955,eps:0.94,c:"--s-caco3"},
+  tio2:{name:"Ticari beyaz boya (TiO₂)",short:"Ticari beyaz",R:0.85,eps:0.90,c:"--s-tio2"},
+  grey:{name:"Gri çatı membranı",short:"Gri membran",R:0.25,eps:0.90,c:"--s-grey"}
+};
+
+/* Istanbul typical July day */
+var SUNRISE=5.65,SUNSET=20.55,GMAX=860;
+function dayTa(t){return 24.6+4.4*Math.cos(2*Math.PI*(t-15)/24);}
+function dayG(t){if(t<=SUNRISE||t>=SUNSET)return 0;return GMAX*Math.pow(Math.sin(Math.PI*(t-SUNRISE)/(SUNSET-SUNRISE)),1.25);}
+var DAY_ENV={Tdp:18,cloud:0,wind:1.5};
+
+/* ---------- theme ---------- */
+var themeBtn=$("themeBtn"),modes=["auto","light","dark"],labels={auto:"otomatik",light:"açık",dark:"koyu"};
+var mode=store("serinboya-theme");if(modes.indexOf(mode)<0)mode="auto";
+function applyTheme(){if(mode==="auto")document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme",mode);themeBtn.textContent="Tema: "+labels[mode];redrawAll();}
+themeBtn.addEventListener("click",function(){mode=modes[(modes.indexOf(mode)+1)%3];store("serinboya-theme",mode);applyTheme();});
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){redrawAll();});
+
+/* ---------- canvas helper ---------- */
+function fitCanvas(cv){
+  var r=cv.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
+  var w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));
+  if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;}
+  var ctx=cv.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx:ctx,w:r.width,h:r.height};
+}
+function mix(a,b,t){return [0,1,2].map(function(i){return Math.round(a[i]+(b[i]-a[i])*t);});}
+function rgb(c){return "rgb("+c.join(",")+")";}
+
+/* ---------- hero roof demo ---------- */
+var roofCv=$("roofCanvas"),hourIn=$("hour"),HERO=["grey","tio2","local"];
+var STARS=[[.12,.1],[.3,.22],[.46,.08],[.62,.18],[.78,.06],[.9,.25],[.2,.35],[.7,.33],[.55,.4],[.05,.28]];
+function heroState(t){
+  var Ta=dayTa(t),G=dayG(t),es=skyEps(DAY_ENV.Tdp,DAY_ENV.cloud),h=hConv(DAY_ENV.wind);
+  return {t:t,Ta:Ta,G:G,ts:HERO.map(function(k){return surfT(MATS[k].R,MATS[k].eps,G,Ta,es,h);})};
+}
+function drawRoof(){
+  var t=parseFloat(hourIn.value),s=heroState(t),f=fitCanvas(roofCv),c=f.ctx,W=f.w,H=f.h;
+  var skyH=H*0.66,e=Math.min(1,s.G/GMAX),day=Math.min(1,e*1.6);
+  var top=mix([10,20,46],[120,170,222],day),bot=mix([36,52,88],[214,232,246],day);
+  var g=c.createLinearGradient(0,0,0,skyH);g.addColorStop(0,rgb(top));g.addColorStop(1,rgb(bot));
+  c.fillStyle=g;c.fillRect(0,0,W,skyH);
+  if(day<1){c.fillStyle="rgba(255,255,255,"+(0.8*(1-day))+")";STARS.forEach(function(p){c.beginPath();c.arc(p[0]*W,p[1]*skyH,1.3,0,7);c.fill();});}
+  if(s.G>0){
+    var fr=(t-SUNRISE)/(SUNSET-SUNRISE),sx=W*(0.06+0.88*fr),sy=skyH*(0.92-0.78*Math.sin(Math.PI*fr));
+    c.fillStyle="rgba(255,236,170,.35)";c.beginPath();c.arc(sx,sy,22,0,7);c.fill();
+    c.fillStyle="#FFE7A3";c.beginPath();c.arc(sx,sy,12,0,7);c.fill();
+  }
+  /* roof deck */
+  c.fillStyle=cssVar("--surface-2");c.fillRect(0,skyH,W,H-skyH);
+  c.fillStyle=cssVar("--line");c.fillRect(0,skyH,W,2);
+  /* temperature scale: 10..70 C mapped into sky area */
+  var tMin=10,tMax=72,yOf=function(T){return skyH-8-(T-tMin)/(tMax-tMin)*(skyH-30);};
+  var colW=W*0.2,gap=(W-3*colW)/4,hot=cssVar("--hot"),cool=cssVar("--accent");
+  var slabCols=["#8A9099","#EFEEEA","#FFFFFF"];
+  var labelCol=day>0.5?"#15202B":"#F2F5F8";
+  c.font="500 "+Math.max(11,Math.round(W/48))+"px 'IBM Plex Mono', monospace";c.textAlign="center";
+  s.ts.forEach(function(T,i){
+    var x=gap+i*(colW+gap);
+    /* slab */
+    c.fillStyle=slabCols[i];c.fillRect(x,skyH+10,colW,(H-skyH)*0.42);
+    c.strokeStyle="rgba(0,0,0,.18)";c.lineWidth=1;c.strokeRect(x+.5,skyH+10.5,colW-1,(H-skyH)*0.42-1);
+    /* temperature column */
+    var y=yOf(Math.min(tMax,T)),bw=colW*0.34,bx=x+(colW-bw)/2;
+    c.globalAlpha=.92;c.fillStyle=T>s.Ta+0.05?hot:cool;c.fillRect(bx,y,bw,skyH-y);c.globalAlpha=1;
+    c.fillStyle=labelCol;c.fillText(fmt(T,1)+" °C",x+colW/2,y-8);
+  });
+  /* ambient dashed line */
+  var ya=yOf(s.Ta);c.setLineDash([6,5]);c.strokeStyle=day>0.5?"rgba(21,32,43,.75)":"rgba(242,245,248,.8)";c.lineWidth=1.5;
+  c.beginPath();c.moveTo(0,ya);c.lineTo(W,ya);c.stroke();c.setLineDash([]);
+  c.textAlign="left";c.fillStyle=labelCol;c.fillText("hava "+fmt(s.Ta,1)+" °C",8,ya-6);
+  /* readouts */
+  var hh=Math.floor(t)%24,mm=Math.round((t-Math.floor(t))*60);$("clock").textContent=(hh<10?"0":"")+hh+":"+(mm<10?"0":"")+mm;
+  $("roofEnv").textContent="Hava "+fmt(s.Ta,1)+" °C, güneş "+fmt(Math.round(s.G),0)+" W/m², çiğ noktası 18 °C";
+  var dl=$("roofRead");while(dl.firstChild)dl.removeChild(dl.firstChild);
+  s.ts.forEach(function(T,i){
+    var d=T-s.Ta,box=document.createElement("div"),dt=document.createElement("dt"),dd=document.createElement("dd"),sm=document.createElement("small");
+    dt.textContent=MATS[HERO[i]].short;dd.textContent=fmt(T,1)+" °C";dd.className=d>0.05?"hot":"cool";
+    sm.textContent=signed(d,1)+" °C havaya göre";dd.appendChild(sm);box.appendChild(dt);box.appendChild(dd);dl.appendChild(box);
+  });
+}
+hourIn.addEventListener("input",function(){stopPlay();drawRoof();});
+var playBtn=$("playBtn"),raf=null,last=0;
+function stopPlay(){if(raf){cancelAnimationFrame(raf);raf=null;}playBtn.setAttribute("aria-pressed","false");playBtn.textContent="Günü oynat";}
+function step(ts){if(!last)last=ts;var dt=(ts-last)/1000;last=ts;var v=parseFloat(hourIn.value)+dt*2.2;if(v>24)v-=24;hourIn.value=v.toFixed(2);drawRoof();raf=requestAnimationFrame(step);}
+playBtn.addEventListener("click",function(){if(raf){stopPlay();return;}last=0;playBtn.setAttribute("aria-pressed","true");playBtn.textContent="Durdur";raf=requestAnimationFrame(step);});
+/* one intro sweep from dawn to early afternoon */
+function intro(){
+  if(reduce){drawRoof();return;}
+  var start=null,from=6,to=13,dur=2200;hourIn.value=from;
+  function a(ts){if(start===null)start=ts;var p=Math.min(1,(ts-start)/dur),k=1-Math.pow(1-p,3);hourIn.value=(from+(to-from)*k).toFixed(2);drawRoof();if(p<1&&!raf)requestAnimationFrame(a);}
+  requestAnimationFrame(a);
+}
+
+/* ---------- spectrum ---------- */
+function gauss(x,m,s){return Math.exp(-Math.pow((x-m)/s,2)/2);}
+function sigm(x){return 1/(1+Math.exp(-x));}
+var SPEC={
+  pure:{R:function(l){return 0.988-0.07*Math.exp(-(l-0.3)/0.035)-0.025*sigm((l-2.0)/0.12);},E:function(l){return Math.min(0.985,0.78+0.17*sigm((l-6.2)/0.6)+0.03*gauss(l,9,0.6));}},
+  local:{R:function(l){return SPEC.pure.R(l)-0.012-0.05*gauss(l,0.46,0.07)-0.015*gauss(l,0.9,0.12);},E:function(l){return SPEC.pure.E(l);}},
+  caco3:{R:function(l){return 0.97-0.11*Math.exp(-(l-0.3)/0.05)-0.03*sigm((l-1.95)/0.12);},E:function(l){return Math.min(0.98,0.76+0.17*sigm((l-6.2)/0.6)+0.03*gauss(l,11.4,0.5));}},
+  tio2:{R:function(l){return (0.07+0.86*sigm((l-0.408)/0.009))*(l>0.75?1-0.11*(l-0.75)/1.75:1);},E:function(l){return 0.72+0.19*sigm((l-6.5)/0.8);}},
+  grey:{R:function(l){return 0.2+0.07*(l-0.3)/2.2;},E:function(){return 0.9;}}
+};
+var ORDER=["local","pure","caco3","tio2","grey"],shown={local:true,pure:false,caco3:true,tio2:true,grey:false};
+function planck(l,T){return Math.pow(l,-5)/(Math.exp(14388/(l*T))-1);}
+function avg(fn,w,a,b,n){var s=0,ws=0;for(var i=0;i<=n;i++){var l=a+(b-a)*i/n,ww=w(l);s+=fn(l)*ww;ws+=ww;}return s/ws;}
+var NS="http://www.w3.org/2000/svg";
+function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+function txt(x,y,s,attrs,parent){var t=el("text",Object.assign({x:x,y:y},attrs||{}),parent);t.textContent=s;return t;}
+function drawSpec(){
+  var svg=$("specSvg");while(svg.childNodes.length>1)svg.removeChild(svg.lastChild);
+  var ink=cssVar("--ink"),ink2=cssVar("--ink-2"),line=cssVar("--line"),acc=cssVar("--accent");
+  var P1={x0:56,x1:456,a:0.3,b:2.5},P2={x0:516,x1:930,a:2.5,b:20},y0=320,y1=30;
+  function X(P,l){return P.x0+(l-P.a)/(P.b-P.a)*(P.x1-P.x0);}
+  function Y(v){return y0-v*(y0-y1);}
+  var font={"font-family":"IBM Plex Mono, monospace","font-size":"12",fill:ink2};
+  /* window band */
+  el("rect",{x:X(P2,8),y:y1,width:X(P2,13)-X(P2,8),height:y0-y1,fill:acc,"fill-opacity":"0.12"},svg);
+  txt((X(P2,8)+X(P2,13))/2,y1+16,"atmosfer penceresi",Object.assign({},font,{"text-anchor":"middle",fill:acc}),svg);
+  /* solar spectrum fill */
+  var pmax=planck(0.5,5778),d="M"+X(P1,0.3)+","+y0;
+  for(var i=0;i<=120;i++){var l=0.3+2.2*i/120;d+=" L"+X(P1,l).toFixed(1)+","+Y(0.92*planck(l,5778)/pmax).toFixed(1);}
+  d+=" L"+X(P1,2.5)+","+y0+" Z";el("path",{d:d,fill:ink2,"fill-opacity":"0.13"},svg);
+  /* 300K blackbody */
+  var bmax=planck(9.66,300),d2="";
+  for(i=0;i<=140;i++){l=2.5+17.5*i/140;d2+=(i?" L":"M")+X(P2,l).toFixed(1)+","+Y(0.92*planck(l,300)/bmax).toFixed(1);}
+  el("path",{d:d2,fill:"none",stroke:ink2,"stroke-width":"1.5","stroke-dasharray":"5 4"},svg);
+  /* UV band marker */
+  el("line",{x1:X(P1,0.4),x2:X(P1,0.4),y1:y1,y2:y0,stroke:line,"stroke-width":"1"},svg);
+  txt(X(P1,0.35),y1+16,"UV",Object.assign({},font,{"text-anchor":"middle"}),svg);
+  /* axes */
+  [P1,P2].forEach(function(P){
+    el("line",{x1:P.x0,x2:P.x1,y1:y0,y2:y0,stroke:ink2,"stroke-width":"1"},svg);
+    el("line",{x1:P.x0,x2:P.x0,y1:y0,y2:y1,stroke:line,"stroke-width":"1"},svg);
+    [0,0.25,0.5,0.75,1].forEach(function(v){el("line",{x1:P.x0,x2:P.x1,y1:Y(v),y2:Y(v),stroke:line,"stroke-width":"0.6","stroke-opacity":"0.6"},svg);});
+  });
+  [0,0.5,1].forEach(function(v){txt(P1.x0-8,Y(v)+4,fmt(v,1),Object.assign({},font,{"text-anchor":"end"}),svg);});
+  [0.5,1,1.5,2,2.5].forEach(function(l){txt(X(P1,l),y0+18,fmt(l,1),Object.assign({},font,{"text-anchor":"middle"}),svg);});
+  [4,8,13,16,20].forEach(function(l){txt(X(P2,l),y0+18,String(l),Object.assign({},font,{"text-anchor":"middle"}),svg);});
+  txt((P1.x0+P1.x1)/2,y0+40,"dalga boyu (µm): güneş bölgesi, yansıtma R",Object.assign({},font,{"text-anchor":"middle",fill:ink}),svg);
+  txt((P2.x0+P2.x1)/2,y0+40,"dalga boyu (µm): kızılötesi, yayıcılık ε",Object.assign({},font,{"text-anchor":"middle",fill:ink}),svg);
+  /* curves */
+  ORDER.slice().reverse().forEach(function(k){
+    if(!shown[k])return;var col=cssVar(MATS[k].c),a="",b="";
+    for(var j=0;j<=160;j++){var l1=0.3+2.2*j/160,l2=2.5+17.5*j/160;
+      a+=(j?" L":"M")+X(P1,l1).toFixed(1)+","+Y(SPEC[k].R(l1)).toFixed(1);
+      b+=(j?" L":"M")+X(P2,l2).toFixed(1)+","+Y(SPEC[k].E(l2)).toFixed(1);}
+    var w=k==="local"?"3":"2.2";
+    el("path",{d:a,fill:"none",stroke:col,"stroke-width":w,"stroke-linejoin":"round"},svg);
+    el("path",{d:b,fill:"none",stroke:col,"stroke-width":w,"stroke-linejoin":"round"},svg);
+  });
+}
+function buildSpecTable(){
+  var tb=$("specTable").querySelector("tbody");while(tb.firstChild)tb.removeChild(tb.firstChild);
+  ORDER.forEach(function(k){
+    var Rs=avg(SPEC[k].R,function(l){return planck(l,5778);},0.3,2.5,400);
+    var Ew=avg(SPEC[k].E,function(l){return planck(l,300);},8,13,200);
+    var Ruv=avg(SPEC[k].R,function(){return 1;},0.3,0.4,50);
+    var tr=document.createElement("tr");
+    var th=document.createElement("th");th.scope="row";var sw=document.createElement("span");sw.className="swatch";sw.style.background=cssVar(MATS[k].c);th.appendChild(sw);th.appendChild(document.createTextNode(MATS[k].name));tr.appendChild(th);
+    [Rs,Ew,Ruv].forEach(function(v){var td=document.createElement("td");td.className="num";td.textContent=fmt(v,3);tr.appendChild(td);});
+    tb.appendChild(tr);
+  });
+}
+function buildChips(){
+  var fs=$("chips");
+  ORDER.forEach(function(k){
+    var w=document.createElement("div");w.className="chip";
+    var i=document.createElement("input");i.type="checkbox";i.id="chip-"+k;i.checked=shown[k];
+    var l=document.createElement("label");l.htmlFor=i.id;var bar=document.createElement("i");l.appendChild(bar);l.appendChild(document.createTextNode(MATS[k].short));
+    i.addEventListener("change",function(){shown[k]=i.checked;drawSpec();});
+    w.appendChild(i);w.appendChild(l);fs.appendChild(w);
+  });
+}
+function colorChips(){ORDER.forEach(function(k){var l=document.querySelector("label[for='chip-"+k+"']");if(l)l.querySelector("i").style.background=cssVar(MATS[k].c);});
+  document.querySelectorAll("#specTable .swatch").forEach(function(s,i){s.style.background=cssVar(MATS[ORDER[i]].c);});}
+
+/* ---------- simulator ---------- */
+var S={preset:"local",R:MATS.local.R,eps:MATS.local.eps,G:850,Ta:29,Tdp:18,cloud:0,wind:1.5};
+var presetSel=$("preset");
+ORDER.forEach(function(k){var o=document.createElement("option");o.value=k;o.textContent=MATS[k].name;presetSel.appendChild(o);});
+var custom=document.createElement("option");custom.value="custom";custom.textContent="Özel (kaydırıcılarla)";presetSel.appendChild(custom);
+var FIELDS={R:[$("R"),$("Rout"),function(v){return fmt(v,3);}],eps:[$("eps"),$("epsOut"),function(v){return fmt(v,3);}],
+  G:[$("G"),$("Gout"),function(v){return fmt(v,0)+" W/m²";}],Ta:[$("Ta"),$("TaOut"),function(v){return fmt(v,1)+" °C";}],
+  Tdp:[$("Tdp"),$("TdpOut"),function(v){return fmt(v,1)+" °C";}],cloud:[$("cloud"),$("cloudOut"),function(v){return "%"+fmt(v*100,0);}],
+  wind:[$("wind"),$("windOut"),function(v){return fmt(v,2)+" m/s";}]};
+function syncInputs(){presetSel.value=S.preset;for(var k in FIELDS){FIELDS[k][0].value=S[k];FIELDS[k][1].textContent=FIELDS[k][2](S[k]);}}
+presetSel.addEventListener("change",function(){var k=presetSel.value;S.preset=k;if(MATS[k]){S.R=MATS[k].R;S.eps=MATS[k].eps;}syncInputs();runSim();});
+Object.keys(FIELDS).forEach(function(k){FIELDS[k][0].addEventListener("input",function(){S[k]=parseFloat(this.value);if(k==="R"||k==="eps")S.preset="custom";syncInputs();runSim();});});
+["ref","area","U","cop","days"].forEach(function(id){$(id).addEventListener("input",runSim);});
+function setStat(id,val,unit,cls){var dd=$(id);dd.textContent=val;if(unit){var s=document.createElement("small");s.textContent=unit;dd.appendChild(s);}dd.className=cls||"";}
+function num(id,lo,hi,def){var v=parseFloat($(id).value);if(!isFinite(v))return def;return Math.min(hi,Math.max(lo,v));}
+var dayData=null;
+function runSim(){
+  var es=skyEps(S.Tdp,S.cloud),h=hConv(S.wind),P=coolP(S.R,S.eps,S.G,S.Ta,es),Ts=surfT(S.R,S.eps,S.G,S.Ta,es,h),d=Ts-S.Ta;
+  setStat("oP",signed(P,0)," W/m²",P>0?"cool":"hot");
+  setStat("oTs",fmt(Ts,1)," °C","");
+  setStat("oDT",signed(d,1)," °C",d<0?"cool":"hot");
+  setStat("oSky",fmt(es,3),"","");
+  var v=$("verdict"),per=fmt(S.G/100,1);
+  if(P>0)v.textContent="Bu koşullarda yüzey, hava sıcaklığındayken metrekare başına "+fmt(P,0)+" W ısıyı uzaya atıyor ve havanın "+fmt(Math.abs(d),1)+" °C altında dengeye geliyor. Güneş yansıtmasındaki her 1 puan burada "+per+" W/m² demek.";
+  else v.textContent="Yüzey güneşten aldığı ısıyı atamıyor ve havanın "+fmt(Math.abs(d),1)+" °C üstünde dengeye geliyor. Güneş yansıtmasını artırmayı ya da çiğ noktasını düşürmeyi deneyin: burada her 1 puan yansıtma "+per+" W/m² demek.";
+  /* daily */
+  var ref=$("ref").value==="grey"?"grey":"tio2",hh=hConv(S.wind),pts=[],noon=null;
+  for(var i=0;i<=96;i++){var t=i/4,Ta=dayTa(t),G=dayG(t);
+    var a=surfT(MATS[ref].R,MATS[ref].eps,G,Ta,es,hh),b=surfT(S.R,S.eps,G,Ta,es,hh);pts.push([t,Ta,a,b]);if(i===52)noon=a-b;}
+  dayData={pts:pts,ref:ref};
+  var A=num("area",10,10000,120),U=num("U",0.1,5,1.2),cop=num("cop",1,8,3),days=num("days",1,200,100),qr=0,qp=0;
+  for(i=0;i<96;i++){qr+=Math.max(0,pts[i][2]-24)*0.25;qp+=Math.max(0,pts[i][3]-24)*0.25;}
+  var heat=U*A*(qr-qp)/1000,elec=heat/cop*days;
+  setStat("sNoon",signed(-noon,1)," °C",noon>0?"cool":"hot");
+  setStat("sHeat",fmt(heat,1)," kWh/gün",heat>0?"cool":"hot");
+  setStat("sElec",fmt(elec,0)," kWh",elec>0?"cool":"hot");
+  $("lgRefTxt").textContent=MATS[ref].short;
+  drawDay();
+}
+function drawDay(){
+  if(!dayData)return;var f=fitCanvas($("dayCanvas")),c=f.ctx,W=f.w,H=f.h,p=dayData.pts;
+  var ink2=cssVar("--ink-2"),line=cssVar("--line"),acc=cssVar("--accent"),hot=cssVar("--hot");
+  var lo=Infinity,hi=-Infinity;p.forEach(function(r){for(var j=1;j<4;j++){lo=Math.min(lo,r[j]);hi=Math.max(hi,r[j]);}});
+  lo=Math.floor((lo-2)/5)*5;hi=Math.ceil((hi+2)/5)*5;
+  var L=44,R=12,T=12,B=30,X=function(t){return L+t/24*(W-L-R);},Y=function(v){return T+(hi-v)/(hi-lo)*(H-T-B);};
+  c.clearRect(0,0,W,H);c.font="500 12px 'IBM Plex Mono', monospace";c.fillStyle=ink2;c.strokeStyle=line;c.lineWidth=1;
+  for(var v=lo;v<=hi;v+=5){c.globalAlpha=.6;c.beginPath();c.moveTo(L,Y(v));c.lineTo(W-R,Y(v));c.stroke();c.globalAlpha=1;c.textAlign="right";c.fillText(v+"°",L-8,Y(v)+4);}
+  c.textAlign="center";[0,6,12,18,24].forEach(function(t){c.fillText((t<10?"0":"")+t+":00",X(t),H-10);});
+  function plot(j,col,w,dash){c.strokeStyle=col;c.lineWidth=w;c.setLineDash(dash||[]);c.beginPath();p.forEach(function(r,i){var x=X(r[0]),y=Y(r[j]);if(i)c.lineTo(x,y);else c.moveTo(x,y);});c.stroke();c.setLineDash([]);}
+  plot(1,ink2,1.5,[5,4]);plot(2,hot,2.2);plot(3,acc,2.8);
+  $("lgRef").style.background=hot;$("lgSel").style.background=acc;
+}
+
+/* ---------- gantt ---------- */
+var WP=[["İP1","Hammadde temini ve karakterizasyon",1,6],["İP2","Boya formülasyonu ve DoE",4,11],["İP3","Optik ve mekanik ölçüm",5,12],["İP4","Çatı istasyonunun kurulması",8,11],["İP5","Saha testi (yaz + kış) ve yaşlandırma",11,22,true],["İP6","Model, bina enerji ve maliyet analizi",14,23],["İP7","Yaygınlaştırma ve rapor",18,24]];
+function buildGantt(){
+  var g=$("gantt"),row=document.createElement("div");row.setAttribute("role","row");row.style.display="contents";
+  var h0=document.createElement("div");h0.className="hd blank";h0.setAttribute("role","columnheader");h0.textContent="İş paketi";h0.style.textAlign="left";row.appendChild(h0);
+  for(var m=1;m<=24;m++){var h=document.createElement("div");h.className="hd";h.setAttribute("aria-hidden","true");h.textContent=(m===1||m%3===0)?String(m):"";row.appendChild(h);}
+  g.appendChild(row);
+  WP.forEach(function(w,i){
+    var r=document.createElement("div");r.setAttribute("role","row");r.style.display="contents";
+    var lb=document.createElement("div");lb.className="lbl";lb.setAttribute("role","rowheader");lb.style.gridRow=String(i+2);
+    var b=document.createElement("b");b.textContent=w[0];lb.appendChild(b);lb.appendChild(document.createTextNode(w[1]));r.appendChild(lb);
+    var bar=document.createElement("div");bar.className="bar"+(w[4]?" field":"");bar.setAttribute("role","cell");
+    bar.style.gridColumn=(w[2]+1)+" / "+(w[3]+2);bar.style.gridRow=String(i+2);bar.textContent=w[2]+"-"+w[3]+". ay";r.appendChild(bar);
+    g.appendChild(r);
+  });
+}
+
+/* ---------- checklist ---------- */
+var TODO=["Güncel literatür taraması; Türkiye'deki ~36 yayının sorgu ve tarih bilgisiyle tablosu","Barit ve kalsit üreticileriyle iletişim, ön numune temini","Laboratuvar erişim yazıları (UV-Vis-NIR entegre küre, FTIR, XRD/XRF)","Çatı kullanım izni (bina yönetimi, yapı işleri)","Ekip: malzeme/kimya, makine/enerji, maden/jeoloji","Ticari saf BaSO₄ ile 1 haftalık ön çatı denemesi, fotoğraf ve grafik","Güncel fiyat teklifleriyle bütçe","Çağrı takvimi kontrolü (1001, 1002-A, 2209-A)"];
+function buildChecklist(){
+  var saved={};try{saved=JSON.parse(store("serinboya-checklist")||"{}")||{};}catch(e){saved={};}
+  var ul=$("checklist");
+  TODO.forEach(function(t,i){
+    var li=document.createElement("li"),lb=document.createElement("label"),cb=document.createElement("input"),sp=document.createElement("span");
+    cb.type="checkbox";cb.checked=saved[i]===true;sp.textContent=t;
+    cb.addEventListener("change",function(){saved[i]=cb.checked;store("serinboya-checklist",JSON.stringify(saved));prog();});
+    lb.appendChild(cb);lb.appendChild(sp);li.appendChild(lb);ul.appendChild(li);
+  });
+  function prog(){var n=ul.querySelectorAll("input:checked").length;$("progress").textContent=n+" / "+TODO.length+" tamamlandı";}
+  prog();
+}
+
+function redrawAll(){drawRoof();drawSpec();colorChips();drawDay();}
+var rt=null;window.addEventListener("resize",function(){clearTimeout(rt);rt=setTimeout(function(){drawRoof();drawDay();},120);});
+
+buildChips();buildSpecTable();buildGantt();buildChecklist();syncInputs();runSim();
+applyTheme();intro();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){drawRoof();drawDay();});
+})();
+</script>
+</body>
+</html>
