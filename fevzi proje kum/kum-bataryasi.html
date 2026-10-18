@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'sha256-Vb8AiYevZo2tp7DyWm+s6aA1wNxlSuFlnb4hBP1mQPo=' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'sha256-fRDxS/rUmwimJU/XbIIv5ZwYQ94jCNd7yb6px/F8Ajw='; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>KUMSAL-EV Kum Bataryası</title>
+<meta name="description" content="Yerel kumlarla ev ölçeğinde güneş enerjili kum bataryası: TÜBİTAK proje önerisi, etkileşimli simülasyon ve kum karşılaştırması.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#EDEFEE; --surface:#F7F8F7; --surface-2:#E2E6E4;
+  --ink:#1D2327; --ink-2:#4C5760; --line:#C9D0CD;
+  --accent:#B33A0B; --on-accent:#FFFFFF;
+  --cold:#5F7686; --pv:#D9A441;
+  --radius:6px;
+  --font:"Archivo", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#161A1D; --surface:#1E2327; --surface-2:#283036;
+    --ink:#E7EAE8; --ink-2:#A6B0B6; --line:#36404A;
+    --accent:#F2874A; --on-accent:#161A1D;
+    --cold:#8DA3B3; --pv:#E2B65A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161A1D; --surface:#1E2327; --surface-2:#283036;
+  --ink:#E7EAE8; --ink-2:#A6B0B6; --line:#36404A;
+  --accent:#F2874A; --on-accent:#161A1D;
+  --cold:#8DA3B3; --pv:#E2B65A;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;font-variation-settings:"wdth" 100}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 16px}
+@media (min-width:768px){.wrap{padding:0 32px}}
+.skip{position:absolute;left:-9999px;top:8px;background:var(--accent);color:var(--on-accent);padding:8px 14px;border-radius:var(--radius);z-index:30}
+.skip:focus{left:16px}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:24px;height:64px}
+.brand{font-weight:800;font-variation-settings:"wdth" 125;letter-spacing:-.01em;text-decoration:none;font-size:18px;white-space:nowrap}
+.nav ul{display:none;list-style:none;margin:0 0 0 auto;padding:0;gap:22px}
+.nav ul a{text-decoration:none;color:var(--ink-2);font-size:15px;padding:10px 0}
+.nav ul a:hover{color:var(--ink)}
+@media (min-width:860px){.nav ul{display:flex}}
+.theme-btn{margin-left:auto;min-height:44px;padding:0 14px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:var(--radius);font:500 14px var(--font);cursor:pointer}
+@media (min-width:860px){.theme-btn{margin-left:8px}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 22px;border-radius:var(--radius);font:600 16px var(--font);text-decoration:none;white-space:nowrap;cursor:pointer;border:1px solid transparent;transition:transform .15s ease,background-color .2s ease}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{background:color-mix(in srgb,var(--accent) 88%,var(--ink))}
+.btn-ghost{border-color:var(--ink-2);color:var(--ink)}
+.btn-ghost:hover{background:var(--surface-2)}
+
+/* hero */
+.hero{padding:40px 0 56px}
+.hero .wrap{display:grid;gap:36px;align-items:center}
+@media (min-width:960px){.hero{padding:56px 0 72px}.hero .wrap{grid-template-columns:1.05fr .95fr;gap:56px}}
+h1{font-size:clamp(2rem,3.9vw,3.1rem);line-height:1.02;letter-spacing:-.02em;font-weight:800;font-variation-settings:"wdth" 118;margin:0 0 20px;text-wrap:balance}
+.lede{font-size:1.15rem;color:var(--ink-2);max-width:46ch;margin:0 0 28px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px}
+.tank-fig{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.tank-fig canvas{display:block;width:100%;height:auto;aspect-ratio:5/4}
+.tank-ctrl{display:flex;align-items:center;gap:14px;margin-top:12px}
+.tank-ctrl label{font-size:14px;color:var(--ink-2);white-space:nowrap}
+.tank-ctrl input{flex:1}
+.readout{font-family:var(--mono);font-size:14px;min-width:13ch;text-align:right}
+.tank-fig figcaption{font-size:13px;color:var(--ink-2);margin-top:8px}
+
+/* sections */
+section{padding:72px 0;border-top:1px solid var(--line);scroll-margin-top:64px}
+@media (min-width:960px){section{padding:96px 0}}
+h2{font-size:clamp(1.7rem,3.4vw,2.6rem);line-height:1.08;letter-spacing:-.015em;font-weight:750;font-variation-settings:"wdth" 112;margin:0 0 14px;max-width:24ch;text-wrap:balance}
+h3{font-size:1.2rem;line-height:1.25;margin:0 0 8px;font-weight:700}
+.intro{color:var(--ink-2);max-width:62ch;margin:0 0 40px}
+p{margin:0 0 14px}
+
+/* how it works: horizontal process */
+.process{display:grid;gap:0;margin:0;padding:0;list-style:none;counter-reset:step}
+.process li{padding:22px 0;border-top:2px solid var(--line);position:relative}
+.process li::before{counter-increment:step;content:counter(step);font:500 14px var(--mono);color:var(--accent);display:block;margin-bottom:6px}
+.process li p{color:var(--ink-2);margin:0;max-width:42ch}
+@media (min-width:860px){.process{grid-template-columns:repeat(3,1fr);gap:32px}}
+.formula{margin-top:40px;display:grid;gap:20px;align-items:baseline}
+@media (min-width:860px){.formula{grid-template-columns:auto 1fr;gap:40px}}
+.formula .eq{font:500 clamp(1.6rem,3vw,2.2rem) var(--mono);white-space:nowrap}
+.formula p{color:var(--ink-2);margin:0;max-width:60ch}
+
+/* timeline */
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.timeline li{display:grid;grid-template-columns:72px 1fr;gap:16px;padding:18px 0;border-left:2px solid var(--line);padding-left:20px;margin-left:6px;position:relative}
+.timeline li::before{content:"";position:absolute;left:-7px;top:26px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--ink-2)}
+.timeline li.gap::before{background:var(--accent);border-color:var(--accent)}
+.timeline time{font:500 15px var(--mono);color:var(--ink-2);padding-top:2px}
+.timeline p{margin:0;color:var(--ink-2)}
+.timeline li.gap h3{color:var(--accent)}
+@media (min-width:960px){
+  .timeline{grid-template-columns:repeat(5,1fr);border-top:2px solid var(--line)}
+  .timeline li{display:block;border-left:0;margin-left:0;padding:28px 20px 0 0}
+  .timeline li::before{top:-7px;left:0}
+  .timeline time{display:block;margin-bottom:6px}
+}
+
+/* simulator */
+.sim{display:grid;gap:32px}
+@media (min-width:1000px){.sim{grid-template-columns:340px 1fr;gap:48px}}
+.controls{display:grid;gap:22px;align-content:start}
+.field label,.field legend{display:flex;justify-content:space-between;gap:12px;font-weight:600;font-size:15px;margin-bottom:6px;padding:0}
+.field output{font:500 14px var(--mono);color:var(--ink)}
+.field .help{font-size:13px;color:var(--ink-2);margin:4px 0 0}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:32px;cursor:pointer}
+select{width:100%;min-height:44px;font:500 16px var(--font);color:var(--ink);background:var(--surface);border:1px solid var(--ink-2);border-radius:var(--radius);padding:0 12px;cursor:pointer}
+.seg{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--ink-2);border-radius:var(--radius);overflow:hidden}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{display:flex;align-items:center;justify-content:center;min-height:44px;margin:0;font-weight:500;font-size:14px;cursor:pointer;border-left:1px solid var(--line)}
+.seg label:first-of-type{border-left:0}
+.seg input:checked + label{background:var(--accent);color:var(--on-accent)}
+.seg input:focus-visible + label{outline:3px solid var(--accent);outline-offset:-3px}
+.results{min-width:0}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:20px 24px;margin-bottom:24px}
+@media (min-width:700px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stat dt{font-size:13px;color:var(--ink-2);line-height:1.35}
+.stat dd{margin:4px 0 0;font:500 clamp(1.5rem,2.6vw,2rem) var(--mono);letter-spacing:-.02em}
+.stat dd small{font-size:.5em;color:var(--ink-2);margin-left:4px}
+.chart-box{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 12px 6px}
+.chart-box canvas{display:block;width:100%;height:320px;touch-action:pan-y}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font:500 12.5px/1.45 var(--mono);padding:6px 9px;border-radius:4px;opacity:0;transition:opacity .12s;white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-size:13px;color:var(--ink-2);margin:10px 4px 2px}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{display:inline-block;width:18px;height:3px;background:var(--accent)}
+.legend i.pv{height:10px;background:var(--pv);opacity:.55}
+.legend i.lim{height:0;border-top:2px dashed var(--ink-2);background:none}
+.summary{margin:18px 0 0;max-width:68ch}
+.note{font-size:13px;color:var(--ink-2);margin-top:14px;max-width:72ch}
+
+/* sands */
+.sands{display:grid;gap:36px}
+@media (min-width:960px){.sands{grid-template-columns:1fr 1fr;gap:56px;align-items:start}}
+.rank{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.rank button{width:100%;display:grid;grid-template-columns:minmax(0,1fr);gap:6px;text-align:left;background:transparent;border:1px solid transparent;border-radius:var(--radius);padding:12px 14px;cursor:pointer;color:var(--ink);font:inherit;transition:background-color .2s}
+.rank button:hover{background:var(--surface-2)}
+.rank button[aria-pressed="true"]{background:var(--surface);border-color:var(--line)}
+.rank .row{display:flex;justify-content:space-between;gap:12px;font-weight:600}
+.rank .val{font:500 14px var(--mono);color:var(--ink-2);white-space:nowrap}
+.rank .bar{height:8px;border-radius:2px;transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+.detail .where{color:var(--ink-2);margin:0 0 18px}
+.props{display:grid;grid-template-columns:repeat(2,1fr);gap:18px 20px;margin:0 0 20px}
+.props dt{font-size:13px;color:var(--ink-2)}
+.props dd{margin:2px 0 0;font:500 1.2rem var(--mono)}
+.caution{border-left:3px solid var(--accent);padding:4px 0 4px 14px;margin:0;color:var(--ink)}
+
+/* originality */
+.orig{display:grid;gap:40px}
+@media (min-width:960px){.orig{grid-template-columns:1.2fr 1fr;gap:64px}}
+.orig-lead h3{font-size:clamp(1.4rem,2.4vw,1.8rem);font-variation-settings:"wdth" 110;margin-bottom:12px}
+.orig-lead p{color:var(--ink-2);max-width:56ch}
+.cells{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:24px}
+.cells div{aspect-ratio:1/1.6;border-radius:4px;border:1px solid var(--line);display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font:500 13px var(--mono);color:#1D2327}
+.orig-list{list-style:none;margin:0;padding:0}
+.orig-list li{padding:18px 0;border-bottom:1px solid var(--line)}
+.orig-list li:first-child{padding-top:0}
+.orig-list p{color:var(--ink-2);margin:0}
+
+/* gantt */
+.gantt{display:grid;gap:4px}
+.g-head,.g-row{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+@media (min-width:760px){.g-head,.g-row{grid-template-columns:260px 1fr;gap:16px;align-items:center}}
+.g-head{display:none}
+@media (min-width:760px){.g-head{display:grid;font:500 12px var(--mono);color:var(--ink-2)}}
+.g-scale{display:grid;grid-template-columns:repeat(24,1fr)}
+.g-scale span{text-align:left}
+.g-row button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr);gap:6px;cursor:pointer;padding:10px 12px;border-radius:var(--radius);width:100%}
+@media (min-width:760px){.g-row button{grid-template-columns:260px 1fr;gap:16px;align-items:center}}
+.g-row button:hover{background:var(--surface-2)}
+.g-row button:focus-visible{outline:3px solid var(--accent);outline-offset:0}
+.g-row button[aria-expanded="true"]{background:var(--surface)}
+.g-name{font-weight:600;font-size:15px}
+.g-name small{display:block;font:500 12px var(--mono);color:var(--ink-2)}
+.g-track{display:grid;grid-template-columns:repeat(24,1fr);height:18px;background:repeating-linear-gradient(90deg,transparent 0 calc(100%/24 - 1px),var(--line) calc(100%/24 - 1px) calc(100%/24))}
+.g-bar{background:var(--ink-2);border-radius:3px}
+.g-row button[aria-expanded="true"] .g-bar{background:var(--accent)}
+.g-panel{padding:4px 12px 16px;color:var(--ink-2);max-width:72ch}
+@media (min-width:760px){.g-panel{margin-left:288px}}
+.g-panel[hidden]{display:none}
+.g-panel strong{color:var(--ink)}
+
+/* risks */
+.risks{display:grid;gap:10px;max-width:860px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+summary{cursor:pointer;padding:16px 20px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px;min-height:44px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font:500 20px var(--mono);color:var(--ink-2);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details > div{padding:0 20px 18px;color:var(--ink-2)}
+.lvl{font:500 12px var(--mono);color:var(--ink-2);margin-left:auto;white-space:nowrap}
+
+/* pil vs kum */
+.pc{display:grid;gap:40px}
+@media (min-width:900px){.pc{grid-template-columns:1fr 1fr;gap:56px}}
+.pc h3{display:flex;align-items:baseline;gap:10px;padding-bottom:10px;border-bottom:2px solid var(--line);margin-bottom:6px}
+.pc h3 .sign{font:500 1.4rem var(--mono);color:var(--accent);width:1ch}
+.pc .minus .sign{color:var(--ink-2)}
+.pc dl{margin:0}
+.pc dt{font-weight:650;margin-top:16px}
+.pc dd{margin:2px 0 0;color:var(--ink-2);max-width:52ch}
+.pick{margin-top:56px;display:grid;gap:20px}
+@media (min-width:900px){.pick{grid-template-columns:320px 1fr;gap:48px;align-items:start}}
+.pick-q{font-weight:650;margin:0 0 10px}
+.pick .opts{display:grid;gap:8px}
+.pick .opts button{min-height:48px;text-align:left;padding:10px 16px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:var(--radius);font:500 15px var(--font);cursor:pointer}
+.pick .opts button:hover{background:var(--surface-2)}
+.pick .opts button[aria-pressed="true"]{border-color:var(--accent);background:var(--surface);box-shadow:inset 3px 0 0 var(--accent)}
+.verdict{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px 26px}
+.verdict h4{margin:0 0 8px;font-size:1.3rem;font-variation-settings:"wdth" 110}
+.verdict p{margin:0;color:var(--ink-2);max-width:60ch}
+.cost{margin-top:64px}
+.cost h3{margin-bottom:4px}
+.cost .sub{color:var(--ink-2);margin:0 0 22px;font-size:15px;max-width:70ch}
+.c-rows{display:grid;gap:18px}
+.c-row{display:grid;gap:6px}
+@media (min-width:860px){.c-row{grid-template-columns:300px 1fr;gap:24px;align-items:center}}
+.c-name{font-weight:600;font-size:15px;line-height:1.35}
+.c-name small{display:block;font-weight:400;color:var(--ink-2);font-size:13px}
+.c-plot{position:relative;height:30px}
+.c-range{position:absolute;top:8px;height:14px;border-radius:3px;background:var(--ink-2);opacity:.8}
+.c-row.sand .c-range{background:var(--accent);opacity:1}
+.c-lbl{position:absolute;top:6px;font:500 12.5px var(--mono);color:var(--ink-2);white-space:nowrap;padding-right:10px;transform:translateX(-100%)}
+.c-axis{display:flex;justify-content:space-between;font:500 12px var(--mono);color:var(--ink-2);border-top:1px solid var(--line);padding-top:6px}
+@media (min-width:860px){.c-axis{margin-left:324px}}
+
+/* 500 C */
+.routes{display:grid;gap:0;margin:0 0 56px;padding:0;list-style:none}
+.routes li{display:grid;gap:4px 24px;padding:20px 0;border-top:1px solid var(--line)}
+@media (min-width:860px){.routes li{grid-template-columns:220px 1fr 160px;align-items:baseline}}
+.routes h3{margin:0}
+.routes p{margin:0;color:var(--ink-2);max-width:62ch}
+.routes .temp{font:500 15px var(--mono);white-space:nowrap}
+.routes li.chosen h3{color:var(--accent)}
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+@media (min-width:860px){.calc{padding:32px}}
+.calc-out{display:grid;grid-template-columns:repeat(2,1fr);gap:20px 24px;margin:0 0 28px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+@media (min-width:860px){.calc-out{grid-template-columns:1.4fr 1fr 1fr 1fr}}
+.calc-out .big dd{font-size:clamp(1.9rem,3.6vw,2.8rem)}
+.calc-in{display:grid;gap:22px 32px}
+@media (min-width:700px){.calc-in{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1050px){.calc-in{grid-template-columns:repeat(3,1fr)}}
+.rules{margin:40px 0 0;padding:0;list-style:none;display:grid;gap:18px}
+@media (min-width:860px){.rules{grid-template-columns:repeat(2,1fr);gap:20px 48px}}
+.rules li{padding-left:18px;border-left:3px solid var(--line)}
+.rules strong{display:block}
+.rules span{color:var(--ink-2)}
+
+/* ısı pompası vs kum */
+.hp-facts{display:grid;gap:18px 40px;margin:0 0 48px}
+@media (min-width:760px){.hp-facts{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1100px){.hp-facts{grid-template-columns:repeat(4,1fr)}}
+.hp-facts div{border-top:2px solid var(--line);padding-top:12px}
+.hp-facts strong{display:block;margin-bottom:2px}
+.hp-facts span{color:var(--ink-2);font-size:15px}
+.bld-pick{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 10px;margin:0 0 18px}
+.bld-pick button{flex:0 0 auto;scroll-snap-align:start;min-height:44px;padding:0 16px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;font:500 15px var(--font);cursor:pointer;white-space:nowrap}
+.bld-pick button:hover{background:var(--surface-2)}
+.bld-pick button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hp-cmp{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+@media (min-width:860px){.hp-cmp{padding:32px}}
+.hp-head h3{font-size:1.4rem;font-variation-settings:"wdth" 110;margin:0 0 4px}
+.hp-head p{color:var(--ink-2);margin:0 0 24px}
+.hp-cols{display:grid;gap:28px}
+@media (min-width:760px){.hp-cols{grid-template-columns:1fr 1fr;gap:40px}}
+.hp-col h4{margin:0 0 14px;font-size:1.05rem;padding-bottom:8px;border-bottom:2px solid var(--ink-2)}
+.hp-col.sand h4{border-color:var(--accent)}
+.hp-col h4 small{font-weight:400;color:var(--ink-2);font-size:.85rem;margin-left:6px}
+.hp-col dl{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 20px;margin:0}
+.hp-col .big{grid-column:1 / -1}
+.hp-col .big dd{font-size:clamp(2rem,4vw,2.8rem)}
+.hp-col.win h4::after{content:"önerilen";font:500 12px var(--mono);color:var(--accent);margin-left:10px}
+.hp-verdict{margin-top:28px;padding-top:22px;border-top:1px solid var(--line)}
+.v-lbl{font-size:14px;color:var(--ink-2);margin:0 0 2px}
+.hp-verdict h4{font-size:1.3rem;margin:0 0 6px;color:var(--accent)}
+.hp-verdict p:last-child{color:var(--ink-2);margin:0;max-width:72ch}
+
+/* close */
+.close{padding:88px 0}
+.close .wrap{display:grid;gap:24px}
+@media (min-width:960px){.close .wrap{grid-template-columns:1.3fr 1fr;align-items:end;gap:56px}}
+.close h2{max-width:20ch}
+.close p{color:var(--ink-2);max-width:56ch}
+footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:14px;color:var(--ink-2)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition-duration:.01ms !important;animation-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#icerik">İçeriğe geç</a>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#ust">KUMSAL-EV</a>
+    <nav aria-label="Bölümler">
+      <ul>
+        <li><a href="#nasil">Nasıl çalışır</a></li>
+        <li><a href="#pil">Pil mi, kum mu</a></li>
+        <li><a href="#sicaklik">500 °C</a></li>
+        <li><a href="#isipompasi">Binalar</a></li>
+        <li><a href="#bosluk">Literatür</a></li>
+        <li><a href="#simulasyon">Simülasyon</a></li>
+        <li><a href="#kumlar">Kumlar</a></li>
+        <li><a href="#plan">İş planı</a></li>
+      </ul>
+    </nav>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="Temayı değiştir">Koyu tema</button>
+  </div>
+</header>
+
+<main id="icerik">
+  <div class="hero" id="ust">
+    <div class="wrap">
+      <div>
+        <h1>Öğlen güneşini kuma doldur, akşam evini ısıt.</h1>
+        <p class="lede">Türkiye'nin beş yerel kumunu, ev ölçeğinde güneş enerjili bir kum bataryasında yan yana test eden TÜBİTAK proje önerisi.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#simulasyon">Simülasyonu aç</a>
+          <a class="btn btn-ghost" href="#kumlar">Kumları karşılaştır</a>
+        </div>
+      </div>
+      <figure class="tank-fig">
+        <canvas id="tank" width="600" height="480" role="img" aria-label="Kum tankının kesiti. Isıtıcı çubukların çevresindeki kum taneleri sıcaklığa göre maviden koyu turuncuya renk değiştirir."></canvas>
+        <div class="tank-ctrl">
+          <label for="hour">Günün saati</label>
+          <input id="hour" type="range" min="0" max="24" step="0.25" value="0">
+          <span class="readout" id="hourOut" aria-live="polite">00:00</span>
+        </div>
+        <figcaption>Temsili kesit: 0,8 m³ Karapınar kumu, 4 kWp PV, nisan ayı. Kaydırıcıyla günü ilerletin.</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <section id="nasil" aria-labelledby="nasil-h">
+    <div class="wrap">
+      <h2 id="nasil-h">Elektrik değil, ısı depolayan bir batarya</h2>
+      <p class="intro">Isı ihtiyacı için elektriği pilde saklamak pahalı bir dolambaçtır. Kum bataryası güneş elektriğini doğrudan ısıya çevirip ucuz, yanmaz ve yerel bir malzemede tutar.</p>
+      <ol class="process">
+        <li><h3>Şarj</h3><p>Çatıdaki PV panel, inverter olmadan doğrudan bir direnç ısıtıcıyı besler. Kum 300 ile 550 °C arasına kadar ısınır.</p></li>
+        <li><h3>Bekletme</h3><p>Taş yünü ve seramik elyafla yalıtılmış tank ısıyı akşama, iyi tasarımda ertesi güne kadar tutar.</p></li>
+        <li><h3>Deşarj</h3><p>Kumun içinden geçen bakır serpantindeki su ısınır; sıcak su ve oda ısıtması için kullanılır.</p></li>
+      </ol>
+      <div class="formula">
+        <div class="eq" aria-label="Q eşittir m çarpı c p çarpı delta T">Q = m · c<sub>p</sub> · ΔT</div>
+        <p>1 m³ kum (yaklaşık 1.550 kg) 50 °C'den 400 °C'ye ısıtılırsa yaklaşık 120 kWh ısı tutar. Bu, bir dairenin kışın birkaç günlük sıcak su ve ısıtma ihtiyacına yakındır.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="pil" aria-labelledby="pil-h">
+    <div class="wrap">
+      <h2 id="pil-h">Neden lityum pil değil de kum?</h2>
+      <p class="intro">İhtiyaç ısıysa, elektriği pilde saklayıp sonra ısıya çevirmek pahalı bir dolambaçtır. Ama kum her durumda kazanmaz; özellikle ısı pompası karşısında.</p>
+      <div class="pc">
+        <div class="plus">
+          <h3><span class="sign" aria-hidden="true">+</span>Kumun güçlü olduğu yerler</h3>
+          <dl>
+            <dt>Çok ucuz depolama</dt><dd>Kum kWh ısı başına 1 $'ın altında. Tüm depo küçük ölçekte ~15-60 $/kWh, pil ise ~300-600 $/kWh.</dd>
+            <dt>Yıpranmaz</dt><dd>Kum döngüyle bozulmaz; 20+ yıl. Pil ~6.000 döngüde kapasite kaybeder.</dd>
+            <dt>Yanmaz, kritik mineral yok</dt><dd>Termal kaçak riski yok. Lityum, grafit veya kobalt gerekmez; malzeme tamamen yerel.</dd>
+            <dt>Yüksek sıcaklık</dt><dd>500 °C'ye kadar ısı: eski radyatörler, sıcak su, kurutma ve proses ısısı için yeterli.</dd>
+            <dt>Büyütmesi ucuz</dt><dd>Kapasiteyi ikiye katlamak pilde maliyeti ikiye katlar; kumda biraz daha kum ve yalıtım ister.</dd>
+          </dl>
+        </div>
+        <div class="minus">
+          <h3><span class="sign" aria-hidden="true">−</span>Zayıf kaldığı yerler</h3>
+          <dl>
+            <dt>Isı kolayca elektriğe dönmez</dt><dd>Stirling veya ORC ile ancak %10-35 verim. Işık ve cihazlar için pil gerekir.</dd>
+            <dt>Isı pompasından fazla panel ister</dt><dd>Direnç 1 kWh elektrikten 1 kWh ısı verir; ısı pompası 2,5-4 kWh. Aynı ısı için ~3 kat PV.</dd>
+            <dt>Isı kaybı</dt><dd>Küçük tankta yüzey/hacim oranı büyük; kalın yalıtım şart.</dd>
+            <dt>Ters mevsim</dt><dd>Isı ihtiyacı kışın, güneş yazın en yüksek. Ev ölçeğinde günler boyunca depolar, aylarca değil.</dd>
+            <dt>Ağır ve yavaş</dt><dd>1 m³ kum ~1,5 ton; ısıl iletkenlik düşük, ısıyı hızlı çekmek zor.</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="pick">
+        <div>
+          <p class="pick-q" id="pickQ">Neyi depolamak istiyorsunuz?</p>
+          <div class="opts" role="group" aria-labelledby="pickQ" id="pickOpts">
+            <button type="button" data-k="0" aria-pressed="false">Elektrik: ışık, cihazlar</button>
+            <button type="button" data-k="1" aria-pressed="false">Düşük sıcaklıkta ısı, yeni bina</button>
+            <button type="button" data-k="2" aria-pressed="true">Yüksek sıcaklıkta ısı, sıcak su</button>
+            <button type="button" data-k="3" aria-pressed="false">Şebekesiz yer, sera, kurutma</button>
+          </div>
+        </div>
+        <div class="verdict" aria-live="polite"><h4 id="vTitle"></h4><p id="vBody"></p></div>
+      </div>
+
+      <div class="cost">
+        <h3>Günde 10 kWh ısı için kaba maliyet, ocak ayı</h3>
+        <p class="sub">2026 için tahmini aralıklar (USD). Varsayım: PV 0,5-0,9 $/Wp, LFP pil 300-600 $/kWh, 3 tepe güneş saati. Bütçe güncel tekliflerle yeniden hesaplanacak.</p>
+        <div class="c-rows" id="costRows"></div>
+        <div class="c-axis" aria-hidden="true"><span>0</span><span>2.500 $</span><span>5.000 $</span><span>7.500 $</span><span>10.000 $</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sicaklik" aria-labelledby="sic-h">
+    <div class="wrap">
+      <h2 id="sic-h">Kumu 500 °C'ye nasıl çıkarırız?</h2>
+      <p class="intro">Panel elektriğiyle çalışan direnç ısıtıcıda sınırı güneşin şiddeti değil, gelen enerji ile yalıtımdan kaçan ısının dengesi belirler.</p>
+      <ul class="routes">
+        <li class="chosen"><h3>PV + direnç ısıtıcı</h3><p>Panel elektriği nikrom ısıtıcıda ısıya döner. Dağınık ışıkta da çalışır, standart çatı paneli kullanır, hareketli parça yok. Projede kullanılan yol.</p><span class="temp">500 °C ve üstü</span></li>
+        <li><h3>Yoğunlaştırılmış güneş</h3><p>Mercek veya aynalar güneşi kuma odaklar; m² başına ~3 kat ısı verir. Yalnızca doğrudan güneşle çalışır, takip sistemi ister, çatı için zor.</p><span class="temp">500-1.000 °C</span></li>
+        <li><h3>Vakum tüplü kolektör</h3><p>Ucuz ve yaygın, ama 500 °C'ye çıkamaz. Yalnızca ön ısıtma için uygun.</p><span class="temp">150-250 °C</span></li>
+      </ul>
+
+      <div class="calc">
+        <dl class="calc-out">
+          <div class="stat big"><dt id="cMainLbl">Hedefe ulaşma süresi</dt><dd id="cMain">-</dd></div>
+          <div class="stat"><dt>Ulaşılabilen en yüksek sıcaklık</dt><dd id="cEq">-</dd></div>
+          <div class="stat"><dt>Isıtmak için gereken enerji</dt><dd id="cE">-</dd></div>
+          <div class="stat"><dt>Hedefte günlük ısı kaybı</dt><dd id="cLoss">-</dd></div>
+        </dl>
+        <form class="calc-in" id="calcForm" novalidate>
+          <div class="field"><label for="cT">Hedef sıcaklık <output for="cT" id="cTOut">500 °C</output></label><input type="range" id="cT" min="200" max="600" step="25" value="500"></div>
+          <div class="field"><label for="cV">Kum hacmi <output for="cV" id="cVOut">0,30 m³</output></label><input type="range" id="cV" min="0.04" max="1.5" step="0.02" value="0.3"></div>
+          <div class="field"><label for="cI">Yalıtım kalınlığı <output for="cI" id="cIOut">30 cm</output></label><input type="range" id="cI" min="5" max="40" step="1" value="30"></div>
+          <div class="field"><label for="cP">PV gücü <output for="cP" id="cPOut">3,0 kWp</output></label><input type="range" id="cP" min="0.4" max="10" step="0.2" value="3"></div>
+          <fieldset class="field"><legend>Ay</legend>
+            <div class="seg">
+              <input type="radio" name="cm" id="cm0" value="0" checked><label for="cm0">Ocak</label>
+              <input type="radio" name="cm" id="cm1" value="1"><label for="cm1">Nisan</label>
+              <input type="radio" name="cm" id="cm2" value="2"><label for="cm2">Temmuz</label>
+              <input type="radio" name="cm" id="cm3" value="3"><label for="cm3">Ekim</label>
+            </div>
+          </fieldset>
+          <div class="field"><label for="cS">Kum türü</label><select id="cS"></select></div>
+        </form>
+        <p class="summary" id="cSum" aria-live="polite"></p>
+        <p class="note">Deşarj yok varsayımı; taş yünü iletkenliği sıcaklıkla artırılarak hesaplanır, PV-doğrudan verim %85. Değerler tahminidir.</p>
+      </div>
+
+      <ul class="rules">
+        <li><strong>Yalıtım her şeydir</strong><span>15 cm'den 30 cm'ye çıkmak kaybı yaklaşık yarıya indirir.</span></li>
+        <li><strong>m³ başına 8-10 kWp</strong><span>Bu oran yazın 500 °C'yi birkaç günde mümkün kılar; kışın sistem 300-350 °C civarında dengelenir.</span></li>
+        <li><strong>Test hücresine tek panel yetmez</strong><span>40 L'lik hücre için ~0,8 kWp veya 30 cm yalıtım gerekir.</span></li>
+        <li><strong>Sıcak çekirdek</strong><span>Isıtıcıları merkezde toplamak dış yüzeyi serin tutar ve kaybı azaltır.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="isipompasi" aria-labelledby="hp-h">
+    <div class="wrap">
+      <h2 id="hp-h">Isı pompası mı, kum mu? Bina bina</h2>
+      <p class="intro">Ocak ayında aynı çatı panelini iki sisteme de verdik. Isı pompası elektriği daha verimli kullanır; kum ise ucuz depolar, yüksek sıcaklık verir ve şebekesiz çalışır.</p>
+
+      <div class="hp-facts">
+        <div><strong>1 kWh elektrikten ısı</strong><span>Isı pompası 1,8-4,5 kWh, kum 1 kWh</span></div>
+        <div><strong>Sıcaklık yükseldikçe</strong><span>Isı pompasının verimi düşer, kumunki değişmez</span></div>
+        <div><strong>Zamanı kaydırma</strong><span>Isı pompası pil veya su deposu ister, kum depolamanın kendisi</span></div>
+        <div><strong>Hacim başına depolama</strong><span>Su deposu ~20-45 kWh/m³, kum ~120-170 kWh/m³</span></div>
+      </div>
+
+      <div class="bld-pick" role="group" aria-label="Bina tipi" id="bldPick"></div>
+
+      <div class="hp-cmp" aria-live="polite">
+        <div class="hp-head">
+          <h3 id="bName"></h3>
+          <p id="bMeta"></p>
+        </div>
+        <div class="hp-cols">
+          <div class="hp-col" id="colHP">
+            <h4>Isı pompası <small>+ pil + PV</small></h4>
+            <dl>
+              <div class="stat big"><dt>Ocakta güneşten karşılanan</dt><dd id="hpFrac"></dd></div>
+              <div class="stat"><dt>Şebekeden ek elektrik</dt><dd id="hpGrid"></dd></div>
+              <div class="stat"><dt>Gerekli pil</dt><dd id="hpBatt"></dd></div>
+              <div class="stat"><dt>İlk yatırım (kaba)</dt><dd id="hpCost"></dd></div>
+            </dl>
+          </div>
+          <div class="hp-col sand" id="colS">
+            <h4>Kum bataryası <small>+ PV, inverter yok</small></h4>
+            <dl>
+              <div class="stat big"><dt>Ocakta güneşten karşılanan</dt><dd id="sFrac"></dd></div>
+              <div class="stat"><dt>Şebekeden ek elektrik</dt><dd id="sGrid"></dd></div>
+              <div class="stat"><dt>Gerekli kum</dt><dd id="sVol"></dd></div>
+              <div class="stat"><dt>İlk yatırım (kaba)</dt><dd id="sCost"></dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="hp-verdict"><p class="v-lbl">Öneri</p><h4 id="bVerdict"></h4><p id="bWhy"></p></div>
+      </div>
+      <p class="note">Örnek binalar ve basit model; tüm değerler tahminidir (USD). Kumda şebekeden ek elektrik ucuz saat tarifesiyle kuma depolanabilir. Projede bu yedi senaryo deneyle doğrulanmış modelle ve 81 il için yeniden hesaplanacak.</p>
+    </div>
+  </section>
+
+  <section id="bosluk" aria-labelledby="bosluk-h">
+    <div class="wrap">
+      <h2 id="bosluk-h">Dünyada büyüyor, Türkiye'de henüz kâğıt üzerinde</h2>
+      <p class="intro">Endüstriyel örnekler ve küçük ölçekli deneyler hızla çoğalıyor. Türkiye'deki çalışmalar ise sayısal model düzeyinde kaldı. Projenin hedeflediği boşluk burada.</p>
+      <ol class="timeline">
+        <li><time datetime="2022">2022</time><div><h3>Kankaanpää</h3><p>Finlandiya'da şehir ısıtma şebekesine bağlı ilk ticari kum bataryası.</p></div></li>
+        <li><time datetime="2025">2025</time><div><h3>Pornainen</h3><p>MW ölçekli, kırma taş dolgulu ikinci nesil tesis devreye girdi.</p></div></li>
+        <li><time datetime="2025">2025-26</time><div><h3>Küçük ölçek deneyler</h3><p>Güneşli kum bataryası, kum depolamalı PV su ısıtıcı ve 1 kW Stirling prototipi yayımlandı.</p></div></li>
+        <li><time>TR</time><div><h3>Türkiye: 5 çalışma</h3><p>Akışkan yatak sayısal modelleri ve çok-üretimli sistem analizleri. Ev ölçeğinde deney yok.</p></div></li>
+        <li class="gap"><time>Öneri</time><div><h3>KUMSAL-EV</h3><p>Ev ölçeğinde gerçek deney ve yerel kum türlerinin eş zamanlı karşılaştırması.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section id="simulasyon" aria-labelledby="sim-h">
+    <div class="wrap">
+      <h2 id="sim-h">Kendi kum bataryanı boyutlandır</h2>
+      <p class="intro">Basit bir toplu ısıl modelle 3 günlük davranışı hesaplar. Değerleri değiştirdikçe grafik ve sonuçlar anında güncellenir.</p>
+      <div class="sim">
+        <form class="controls" id="simForm" novalidate>
+          <div class="field">
+            <label for="bld">Bina tipi</label>
+            <select id="bld" name="bld"></select>
+            <p class="help" id="bldHelp"></p>
+          </div>
+          <div class="field">
+            <label for="sand">Kum türü</label>
+            <select id="sand" name="sand"></select>
+          </div>
+          <fieldset class="field">
+            <legend>Ay</legend>
+            <div class="seg" id="monthSeg">
+              <input type="radio" name="month" id="m0" value="0" checked><label for="m0">Ocak</label>
+              <input type="radio" name="month" id="m1" value="1"><label for="m1">Nisan</label>
+              <input type="radio" name="month" id="m2" value="2"><label for="m2">Temmuz</label>
+              <input type="radio" name="month" id="m3" value="3"><label for="m3">Ekim</label>
+            </div>
+            <p class="help">İç Anadolu için yaklaşık güneşlenme ve ortam sıcaklığı.</p>
+          </fieldset>
+          <div class="field">
+            <label for="kwp">PV gücü <output for="kwp" id="kwpOut">3,0 kWp</output></label>
+            <input type="range" id="kwp" name="kwp" min="0.5" max="6" step="0.5" value="3">
+          </div>
+          <div class="field">
+            <label for="vol">Kum hacmi <output for="vol" id="volOut">0,8 m³</output></label>
+            <input type="range" id="vol" name="vol" min="0.2" max="2" step="0.1" value="0.8">
+          </div>
+          <div class="field">
+            <label for="ins">Yalıtım kalınlığı <output for="ins" id="insOut">15 cm</output></label>
+            <input type="range" id="ins" name="ins" min="5" max="30" step="1" value="15">
+          </div>
+          <div class="field">
+            <label for="dem">Günlük ısı ihtiyacı <output for="dem" id="demOut">10 kWh</output></label>
+            <input type="range" id="dem" name="dem" min="2" max="40" step="1" value="10">
+            <p class="help" id="demHelp">Sabah 06-08 ve akşam 17-23 arasında çekilir.</p>
+          </div>
+        </form>
+
+        <div class="results">
+          <dl class="stats">
+            <div class="stat"><dt>En yüksek kum sıcaklığı</dt><dd id="sTmax">-</dd></div>
+            <div class="stat"><dt>Tepe anında kullanılabilir ısı</dt><dd id="sStore">-</dd></div>
+            <div class="stat"><dt>Karşılanan ısı ihtiyacı</dt><dd id="sMet">-</dd></div>
+            <div class="stat"><dt>Yalıtım kaybı payı</dt><dd id="sLoss">-</dd></div>
+          </dl>
+          <div class="chart-box">
+            <canvas id="chart" role="img" aria-label="72 saatlik kum sıcaklığı ve PV gücü grafiği. Sayısal özet grafiğin altındadır."></canvas>
+            <div class="tip" id="tip" aria-hidden="true"></div>
+            <div class="legend" aria-hidden="true">
+              <span><i></i>Kum sıcaklığı</span>
+              <span><i class="pv"></i>PV ısıtıcı gücü</span>
+              <span><i class="lim"></i>Üst sınır ve 60 °C kullanım eşiği</span>
+            </div>
+          </div>
+          <p class="summary" id="summary" aria-live="polite"></p>
+          <p class="note">Model tek düğümlü (tank içi sıcaklık dağılımı ihmal) ve kum özellikleri literatürdeki tipik değerlerdir. Projede gerçek değerler ölçülecek ve model deneyle doğrulanacaktır.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kumlar" aria-labelledby="kum-h">
+    <div class="wrap">
+      <h2 id="kum-h">Beş bölge, beş kum, tek soru: hangisi daha çok ısı tutar?</h2>
+      <p class="intro">Sıralama, 1 m³ kumun 50 °C'den güvenli üst sıcaklığına kadar depolayabileceği tahmini ısıdır. Bir kuma tıklayarak ayrıntısını görün.</p>
+      <div class="sands">
+        <ul class="rank" id="rank"></ul>
+        <article class="detail" id="detail" aria-live="polite">
+          <h3 id="dName"></h3>
+          <p class="where" id="dWhere"></p>
+          <dl class="props">
+            <div><dt>Yığın yoğunluğu</dt><dd id="dRho"></dd></div>
+            <div><dt>Özgül ısı</dt><dd id="dCp"></dd></div>
+            <div><dt>Isıl iletkenlik</dt><dd id="dK"></dd></div>
+            <div><dt>Güvenli üst sıcaklık</dt><dd id="dTmax"></dd></div>
+          </dl>
+          <p class="caution" id="dNote"></p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="ozgun" aria-labelledby="ozgun-h">
+    <div class="wrap">
+      <h2 id="ozgun-h">Projeyi özgün yapan ne?</h2>
+      <div class="orig">
+        <div class="orig-lead">
+          <h3>Aynı güneş, aynı gün, beş kum</h3>
+          <p>Beş özdeş küçük hücre, eşit güçteki beş PV panelden beslenir ve dışarıda yan yana çalışır. Hava durumu ve ışınım farkı ortadan kalktığı için karşılaştırma gerçek anlamda adil olur. Literatürde kumlar genellikle farklı günlerde ya da yalnızca fırında test ediliyor.</p>
+          <div class="cells" id="cells" aria-hidden="true"></div>
+        </div>
+        <ul class="orig-list">
+          <li><h3>Yerel kum kataloğu</h3><p>Özgül ısı, iletkenlik, yoğunluk ve 100+ ısıl döngü sonrası bozunma tek çalışmada ölçülür.</p></li>
+          <li><h3>İnvertersiz PV bağlantısı</h3><p>Panel doğrudan uygun dirençli ısıtıcıya bağlanır; maliyet düşer, şebekesiz kullanım mümkün olur.</p></li>
+          <li><h3>Açık kaynak, doğrulanmış model</h3><p>Deneyle kalibre edilen model PVGIS verisiyle 81 il için uygunluk haritasına dönüşür.</p></li>
+          <li><h3>Ev ölçeği ekonomi</h3><p>Doğal gaz, ısı pompası ve pil çözümleriyle maliyet ve geri ödeme karşılaştırması.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="plan" aria-labelledby="plan-h">
+    <div class="wrap">
+      <h2 id="plan-h">24 aylık iş planı</h2>
+      <p class="intro">Bir iş paketine tıklayarak içeriğini ve çıktısını açın.</p>
+      <div class="gantt" id="gantt">
+        <div class="g-head" aria-hidden="true"><span>İş paketi</span><div class="g-scale" id="gScale"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="riskler" aria-labelledby="risk-h">
+    <div class="wrap">
+      <h2 id="risk-h">Riskler ve B planları</h2>
+      <p class="intro">Hakemlerin ilk soracağı sorular ve hazır cevapları.</p>
+      <div class="risks">
+        <details><summary>Kalkerli kum yüksek sıcaklıkta bozunabilir <span class="lvl">olasılık yüksek</span></summary><div>Üst sıcaklık TGA ile belirlenir; kıyı kumu 500 °C altı sınıfında test edilir. Bozunma sınırının kendisi de yayımlanabilir bir bulgudur.</div></details>
+        <details><summary>Kuvarsın 573 °C faz geçişi tankı zorlayabilir <span class="lvl">olasılık orta</span></summary><div>Kuvarslı kumlarda işletme sıcaklığı 550 °C ile sınırlanır ve hacim değişimi termokupl verisiyle izlenir.</div></details>
+        <details><summary>DSC ve ısıl iletkenlik cihazına erişim <span class="lvl">olasılık orta</span></summary><div>Üniversite merkez laboratuvarı kullanılır; erişim yoksa bütçeye hizmet alımı kalemi eklenir.</div></details>
+        <details><summary>Kışın düşük ışınım <span class="lvl">olasılık orta</span></summary><div>Kış verisi de sonuçtur. Ayrıca laboratuvar güç kaynağıyla kontrollü şarj deneyleri yapılarak kumlar sabit güçte karşılaştırılır.</div></details>
+        <details><summary>Yüksek sıcaklık güvenliği <span class="lvl">olasılık düşük</span></summary><div>Termostat, termal sigorta, kilitli muhafaza ve yazılı yangın risk değerlendirmesi deneylerden önce hazırlanır.</div></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="close" aria-labelledby="close-h">
+    <div class="wrap">
+      <div>
+        <h2 id="close-h">Boşluk açıkken başvur</h2>
+        <p>Önce 12 aylık 1002-A ile üç kumda ön veri, ardından 1001 ile ev ölçeği prototipin tamamı. Ayrıntılar proje metninde.</p>
+      </div>
+      <div class="cta-row"><a class="btn btn-primary" href="KUM_BATARYASI_PROJE.md">Proje metnini aç</a></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>KUMSAL-EV proje önerisi taslağı, 2026</span>
+    <span>Sayısal değerler tahminidir; projede ölçülecektir.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- data ---------- */
+  // Tipik literatür değerleri (tahmini); projede ölçülecek.
+  var SANDS = [
+    {id:"sile", name:"Şile kuvars kumu", where:"İstanbul, Marmara. Baskın mineral: kuvars.", rho:1600, cp:0.83, k:0.30, tmax:550, tone:"#E4D7B8",
+     note:"Saf ve yaygın; referans malzeme. 573 °C'deki kuvars faz geçişi nedeniyle üst sınır 550 °C."},
+    {id:"karapinar", name:"Karapınar kumul kumu", where:"Konya, İç Anadolu. Kuvars ve feldspat.", rho:1550, cp:0.82, k:0.27, tmax:550, tone:"#D8B98A",
+     note:"Türkiye'nin en güneşli bölgesinde bol ve ucuz. Toz içeriği ve tane şekli ölçülecek."},
+    {id:"antalya", name:"Kıyı kalkerli kumu", where:"Antalya, Akdeniz. Kalsit ve kuvars.", rho:1450, cp:0.85, k:0.25, tmax:500, tone:"#EDE3CF",
+     note:"Yaklaşık 600 °C üzerinde kalsinasyon riski var. Güvenli sınır TGA ile belirlenecek."},
+    {id:"kula", name:"Kula bazaltik kumu", where:"Manisa, Ege. Bazaltik cam ve piroksen.", rho:1500, cp:0.84, k:0.32, tmax:650, tone:"#6E6862",
+     note:"Yüksek sıcaklık dayanımı beklenir. Gözeneklilik ve nem tutma ölçülecek."},
+    {id:"karadeniz", name:"Magnetitli kara kum", where:"Doğu Karadeniz kıyıları. Magnetit ve silikatlar.", rho:2400, cp:0.68, k:0.45, tmax:600, tone:"#3F3D3B",
+     note:"Yüksek yoğunluk sayesinde hacim başına en çok ısıyı tutması beklenir. Yüksek sıcaklıkta oksitlenme izlenecek."}
+  ];
+  var MONTHS = [
+    {name:"ocak", psh:3.0, amb:0},
+    {name:"nisan", psh:5.3, amb:12},
+    {name:"temmuz", psh:7.3, amb:28},
+    {name:"ekim", psh:4.6, amb:14}
+  ];
+  var WPS = [
+    {code:"İP1", name:"Kum tedariki ve karakterizasyon", s:1, e:7, out:"Kum özellik kataloğu (açık veri seti)",
+     body:"Beş bölgeden numune alımı; XRD/XRF, tane boyu, DSC ile özgül ısı, ısıl iletkenlik, TGA ve 100+ döngü sonrası SEM."},
+    {code:"İP2", name:"Tasarım ve ön modelleme", s:3, e:8, out:"Tasarım raporu ve ilk ısıl model",
+     body:"Hücre ve prototip ölçülendirmesi, PV ile ısıtıcı direnci eşleştirmesi, yalıtım seçimi, 1B/2B ısıl model."},
+    {code:"İP3", name:"Beşiz hücre düzeneği", s:6, e:10, out:"Çalışan dış ortam test düzeneği",
+     body:"Beş özdeş 30-50 L hücre, hücre başına en az 9 termokupl, piranometre ve 1 dakikalık veri toplama."},
+    {code:"İP4", name:"Karşılaştırmalı deneyler", s:9, e:18, out:"Kum performans sıralaması",
+     body:"Yaz ve kış kampanyaları; şarj hızı, bekleme kaybı, deşarj verimi ve ısıl döngü davranışı."},
+    {code:"İP5", name:"Ev ölçeği prototip", s:12, e:21, out:"Prototip performans verisi",
+     body:"En iyi kumla 0,5-1 m³ tank, 2-3 kWp invertersiz PV, sıcak su ve oda ısıtması deşarjı."},
+    {code:"İP6", name:"Doğrulama, ekonomi, yaygınlaştırma", s:16, e:24, out:"Makale, açık kaynak model, 81 il haritası",
+     body:"Modelin deneyle ±%10 içinde doğrulanması, PVGIS ile il bazlı analiz, LCOH ve geri ödeme hesabı."}
+  ];
+
+  /* ---------- helpers ---------- */
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var nf1 = new Intl.NumberFormat("tr-TR",{maximumFractionDigits:1, minimumFractionDigits:1});
+  var nf0 = new Intl.NumberFormat("tr-TR",{maximumFractionDigits:0});
+  var nf2 = new Intl.NumberFormat("tr-TR",{maximumFractionDigits:2, minimumFractionDigits:2});
+  function $(id){ return document.getElementById(id); }
+  function css(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function clamp(v,a,b){ return Math.min(b,Math.max(a,v)); }
+  function num(el,def,min,max){ var v=parseFloat(el.value); return isFinite(v)?clamp(v,min,max):def; }
+  function el(tag, cls, text){ var n=document.createElement(tag); if(cls) n.className=cls; if(text!=null) n.textContent=text; return n; }
+  function setStat(id, value, unit){
+    var dd=$(id); dd.textContent=value;
+    if(unit){ var s=el("small",null,unit); dd.appendChild(s); }
+  }
+
+  // Sıcaklık -> renk (soğuk mavi-gri, kum, amber, kor)
+  var RAMP = [[20,[95,118,134]],[150,[216,196,160]],[300,[227,155,59]],[450,[194,65,12]],[620,[110,22,8]]];
+  function heat(t){
+    if(t<=RAMP[0][0]) return "rgb("+RAMP[0][1].join(",")+")";
+    for(var i=1;i<RAMP.length;i++){
+      if(t<=RAMP[i][0]){
+        var a=RAMP[i-1], b=RAMP[i], f=(t-a[0])/(b[0]-a[0]);
+        return "rgb("+[0,1,2].map(function(j){return Math.round(a[1][j]+(b[1][j]-a[1][j])*f);}).join(",")+")";
+      }
+    }
+    return "rgb("+RAMP[RAMP.length-1][1].join(",")+")";
+  }
+
+  /* ---------- theme ---------- */
+  var root=document.documentElement, themeBtn=$("themeBtn");
+  function isDark(){
+    var t=root.getAttribute("data-theme");
+    if(t) return t==="dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+  function syncThemeBtn(){ themeBtn.textContent = isDark() ? "Açık tema" : "Koyu tema"; }
+  try{ var saved=localStorage.getItem("kumsal-theme"); if(saved==="dark"||saved==="light") root.setAttribute("data-theme",saved); }catch(e){}
+  syncThemeBtn();
+  themeBtn.addEventListener("click", function(){
+    var next = isDark() ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try{ localStorage.setItem("kumsal-theme", next); }catch(e){}
+    syncThemeBtn(); drawChart(); drawTank(currentHour);
+  });
+
+  /* ---------- model ---------- */
+  var ETA = 0.85, K_INS = 0.06;
+  // Bina tipleri: q ocak ısı ihtiyacı (kWh/gün), ts çıkış sıcaklığı, cop ocak ısı pompası COP,
+  // roof kullanılabilir PV (kWp), night gece payı, profile ısı çekiş saatleri. Örnek değerler.
+  var BUILDINGS = [
+    {name:"Yeni yalıtımlı müstakil ev", short:"Yeni müstakil", q:25, ts:35, cop:3.5, roof:8, psh:3.0, night:0.7, profile:"home",
+     emit:"Yerden ısıtma, 35 °C", verdict:"Isı pompası", why:"Düşük sıcaklıklı yerden ısıtmada COP yüksek; ocakta bile çatıdaki panelle tamamen güneşten ısıtılabilir. Kum yalnızca yaz fazlasını sıcak suya çevirmek için isteğe bağlı küçük bir depo."},
+    {name:"Eski apartman dairesi (radyatörlü)", short:"Eski daire", q:40, ts:70, cop:2.2, roof:1.5, psh:3.0, night:0.7, profile:"home",
+     emit:"Panel radyatör, 70 °C", verdict:"Isı pompası veya bina ölçeği", why:"Çatı payı çok küçük, iki seçenek de güneşten az pay alır. Tek bir daireye yaklaşık 1 ton kum ve yalıtım koymak döşeme yükü ve yer açısından uygun değil; doğru ölçek tüm binadır."},
+    {name:"Köy evi (sobalı, şebeke zayıf)", short:"Köy evi", q:45, ts:60, cop:2.5, roof:10, psh:3.0, night:0.7, profile:"home",
+     emit:"Radyatör veya sıcak hava, 60 °C", verdict:"Kum + mevcut soba", why:"Isı pompası güçlü şebeke ve 12 kWh'ı aşan pil ister. Kum invertersiz ve şebekesiz çalışır, ocakta ısının yaklaşık %40'ını, bahar ve yazın sıcak suyun tamamını karşılar; odun ve kömür tüketimini azaltır."},
+    {name:"Soğuk iklim müstakil (Erzurum)", short:"Erzurum", q:70, ts:55, cop:1.9, roof:8, psh:3.5, night:0.7, profile:"home",
+     emit:"Radyatör 55 °C, dışarısı -15 °C", verdict:"Hibrit", why:"-15 °C'de ısı pompası COP'si 1,9'a düşer ve pahalı pil gerekir. Isı pompası baz yükü, kum soğuk dalgalarda tepe yükü ve sıcak suyu karşılar."},
+    {name:"Küçük sera (200 m²)", short:"Sera", q:60, ts:40, cop:3.0, roof:15, psh:3.0, night:1.0, profile:"night",
+     emit:"Sıcak hava, 40 °C, yalnızca gece", verdict:"Kum", why:"Isı ihtiyacının tamamı gece; ısı pompası yaklaşık 20 kWh pil ister. Kum gece ısısını ucuza depolar ve sıcak havayı doğrudan kum yatağından üfleyerek verir; yer sorunu yok."},
+    {name:"Okul (gündüz kullanım)", short:"Okul", q:300, ts:55, cop:2.8, roof:40, psh:3.0, night:0.3, profile:"day",
+     emit:"Radyatör 55 °C, 07-16 arası", verdict:"Isı pompası", why:"Kullanım gündüz, güneşle çakışıyor; çok az depolama gerekir. Kum yalnızca hafta sonu PV'siyle pazartesi sabahı ön ısıtma için anlamlı."},
+    {name:"Apartman bloğu, merkezi kazan (20 daire)", short:"Apartman bloğu", q:600, ts:70, cop:2.2, roof:25, psh:3.0, night:0.7, profile:"home",
+     emit:"Radyatör 70 °C, kazan dairesi", verdict:"Hibrit (kumun en mantıklı büyük ölçeği)", why:"Büyük tankta kayıp oranı düşük, kazan dairesinde yer var, 70 °C ısı pompasını zorlar. Çatı ihtiyacın küçük bir kısmını karşılar; kum ucuz saat elektriğiyle de şarj edilip doğal gaz kazanının tepe yükünü azaltır."}
+  ];
+  function demandShare(h, profile){
+    if(profile==="day") return (h>=7 && h<16) ? 1/9 : 0;
+    if(profile==="night") return (h>=18 || h<7) ? 1/13 : 0;
+    if(h>=6 && h<8) return 0.30/2;
+    if(h>=17 && h<23) return 0.70/6;
+    return 0;
+  }
+  var PROFILE_TXT = {home:"Sabah 06-08 ve akşam 17-23 arasında çekilir.", day:"Gündüz 07-16 arasında çekilir.", night:"Gece 18-07 arasında çekilir."};
+  function simulate(p){
+    var s=SANDS[p.sand], m=MONTHS[p.month];
+    var T_USE = p.tuse || 60, profile = p.profile || "home";
+    var MAX_DISCHARGE_W = Math.max(3000, p.dem*1000*0.15*1.2);
+    var C = s.rho*p.vol*s.cp*1000;                    // J/K
+    var r = Math.cbrt(p.vol/(2*Math.PI));              // H = D silindir
+    var A = 6*Math.PI*r*r;                             // m2
+    var UA = A/((p.ins/100)/K_INS + 0.12);             // W/K
+    var Ppk = p.kwp*m.psh*Math.PI/24*1000*ETA;         // W, günlük enerji = kWp*PSH*ETA
+    var dt=300, T=m.amb+30, days=6, showFrom=3*24;
+    var out=[], Ein=0, Edel=0, Edem=0, Eloss=0, Tpk=-1e9;
+    for(var i=0;i<days*24*3600/dt;i++){
+      var t=i*dt/3600, h=t%24;
+      var pv = (h>=6 && h<18) ? Ppk*Math.sin(Math.PI*(h-6)/12) : 0;
+      var charge = T < s.tmax ? pv : 0;
+      var dem = p.dem*1000*demandShare(h, profile);
+      var del = T > T_USE ? Math.min(dem, MAX_DISCHARGE_W) : 0;
+      var loss = UA*(T-m.amb);
+      T += (charge-del-loss)*dt/C;
+      T = Math.min(T, s.tmax);
+      if(t>=showFrom){
+        Ein+=charge*dt; Edel+=del*dt; Edem+=dem*dt; Eloss+=loss*dt;
+        if(T>Tpk) Tpk=T;
+        if(i%3===0) out.push({t:t-showFrom, T:T, pv:pv/1000});
+      }
+    }
+    return {series:out, sand:s, month:m, Tpk:Tpk, Ppk:Ppk/1000, tuse:T_USE,
+      store:Math.max(0,C*(Tpk-T_USE)/3.6e6),
+      met: Edem>0 ? Edel/Edem : 0,
+      lossShare: Ein>0 ? Math.min(1,Eloss/Ein) : 0,
+      inDay: Ein/3/3.6e6, demDay: Edem/3/3.6e6};
+  }
+
+  /* ---------- simulator UI ---------- */
+  var sandSel=$("sand");
+  SANDS.forEach(function(s,i){ var o=el("option",null,s.name); o.value=String(i); sandSel.appendChild(o); });
+  sandSel.value="1";
+  var bldSel=$("bld");
+  var cOpt=el("option",null,"Serbest (kendi değerlerim)"); cOpt.value="-1"; bldSel.appendChild(cOpt);
+  BUILDINGS.forEach(function(b,i){ var o=el("option",null,b.name); o.value=String(i); bldSel.appendChild(o); });
+  var inputs = {kwp:$("kwp"), vol:$("vol"), ins:$("ins"), dem:$("dem")};
+  var result=null;
+  function rng(input){ return num(input, parseFloat(input.min), parseFloat(input.min), parseFloat(input.max)); }
+  function setRange(input, min, max, step, value){
+    input.min=String(min); input.max=String(max); input.step=String(step);
+    input.value=String(clamp(Math.round(value/step)*step, min, max));
+  }
+  function currentBuilding(){ var i=parseInt(bldSel.value,10); return (i>=0 && i<BUILDINGS.length) ? BUILDINGS[i] : null; }
+  function applyBuilding(){
+    var b=currentBuilding();
+    if(!b){
+      setRange(inputs.kwp,0.5,6,0.5,rng(inputs.kwp)); setRange(inputs.vol,0.2,2,0.1,rng(inputs.vol));
+      setRange(inputs.dem,2,40,1,rng(inputs.dem));
+      $("bldHelp").textContent="Ev ölçeği, 60 °C kullanım eşiği."; return;
+    }
+    var big=b.q>=200;
+    setRange(inputs.kwp, big?5:0.5, big?80:16, big?1:0.5, b.roof);
+    setRange(inputs.vol, big?1:0.1, big?20:3, big?0.5:0.1, Math.max(0.2, b.q/60));
+    setRange(inputs.dem, big?50:2, big?900:90, big?10:1, b.q);
+    setRange(inputs.ins, 5, 40, 1, big?30:20);
+    $("bldHelp").textContent=b.emit+". Varsayılan PV, kullanılabilir çatı/arazidir.";
+  }
+  bldSel.addEventListener("change", function(){ applyBuilding(); update(); });
+
+  function params(){
+    var mEl=document.querySelector('input[name="month"]:checked'), b=currentBuilding();
+    return {
+      sand: clamp(parseInt(sandSel.value,10)||0,0,SANDS.length-1),
+      month: clamp(parseInt(mEl?mEl.value:"0",10)||0,0,MONTHS.length-1),
+      kwp: rng(inputs.kwp), vol: rng(inputs.vol), ins: rng(inputs.ins), dem: rng(inputs.dem),
+      tuse: b ? b.ts+15 : 60, profile: b ? b.profile : "home", cop: b ? b.cop : 3
+    };
+  }
+  function update(){
+    var p=params();
+    $("demHelp").textContent = PROFILE_TXT[p.profile];
+    $("kwpOut").textContent = nf1.format(p.kwp)+" kWp";
+    $("volOut").textContent = nf1.format(p.vol)+" m³";
+    $("insOut").textContent = nf0.format(p.ins)+" cm";
+    $("demOut").textContent = nf0.format(p.dem)+" kWh";
+    result = simulate(p);
+    setStat("sTmax", nf0.format(result.Tpk), "°C");
+    setStat("sStore", nf1.format(result.store), "kWh");
+    setStat("sMet", nf0.format(result.met*100), "%");
+    setStat("sLoss", nf0.format(result.lossShare*100), "%");
+    var msg = "Günde ortalama " + nf1.format(result.inDay) + " kWh ısı kuma giriyor, ihtiyaç " + nf1.format(result.demDay) + " kWh. ";
+    if(result.met>=0.95) msg += "Bu ayarlarla ısı ihtiyacının neredeyse tamamı güneşten karşılanıyor.";
+    else if(result.Tpk>=result.sand.tmax-1) msg += "Kum üst sınıra ulaşıyor ve fazla güneş boşa gidiyor; daha fazla kum hacmi ekleyin.";
+    else if(result.lossShare>0.35) msg += "Kayıplar yüksek; yalıtımı kalınlaştırmak en ucuz iyileştirme olur.";
+    else msg += "İhtiyacın kalan kısmı için PV gücünü artırmak gerekir.";
+    // Aynı PV ile ısı pompası (COP ortam sıcaklığıyla kabaca artar; gece payı için pil varsayılır)
+    var copM = p.cop + result.month.amb*0.05;
+    var hpMet = Math.min(1, p.kwp*result.month.psh*ETA*copM / Math.max(0.1,result.demDay));
+    msg += " Karşılaştırma: aynı panelle ısı pompası (COP yaklaşık " + nf1.format(copM) + ", pille) ihtiyacın %" + nf0.format(hpMet*100) + "'ini karşılardı.";
+    $("summary").textContent = msg;
+    drawChart();
+  }
+  $("simForm").addEventListener("input", update);
+  $("simForm").addEventListener("submit", function(e){ e.preventDefault(); });
+
+  /* ---------- chart ---------- */
+  var chart=$("chart"), tip=$("tip"), hoverIdx=-1;
+  function drawChart(){
+    if(!result) return;
+    var dpr=window.devicePixelRatio||1, W=chart.clientWidth, H=chart.clientHeight;
+    chart.width=Math.round(W*dpr); chart.height=Math.round(H*dpr);
+    var c=chart.getContext("2d"); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,W,H);
+    var pad={l:44,r:44,t:14,b:28}, iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+    var ser=result.series, tmaxAxis=Math.max(100, Math.ceil((result.sand.tmax+30)/100)*100);
+    var pvMax=Math.max(1, Math.ceil(result.Ppk));
+    var ink=css("--ink"), ink2=css("--ink-2"), line=css("--line"), acc=css("--accent"), pvc=css("--pv");
+    function x(t){ return pad.l + t/72*iw; }
+    function y(T){ return pad.t + ih - T/tmaxAxis*ih; }
+    function yp(p){ return pad.t + ih - p/pvMax*ih*0.5; }
+    c.font='12px "IBM Plex Mono", monospace'; c.fillStyle=ink2; c.strokeStyle=line; c.lineWidth=1;
+    // ızgara
+    for(var g=0; g<=tmaxAxis; g+=100){
+      c.beginPath(); c.moveTo(pad.l,y(g)+.5); c.lineTo(W-pad.r,y(g)+.5); c.stroke();
+      c.textAlign="right"; c.fillText(g+"°", pad.l-6, y(g)+4);
+    }
+    c.textAlign="center";
+    for(var d=0; d<=72; d+=12){ c.fillText(d%24===0 ? (d/24+1)+". gün" : "12:00", x(d), H-8); }
+    c.textAlign="left"; c.fillText(pvMax+" kW", W-pad.r+6, yp(pvMax)+4);
+    // PV alanı
+    c.beginPath(); c.moveTo(x(0),yp(0));
+    ser.forEach(function(p){ c.lineTo(x(p.t), yp(p.pv)); });
+    c.lineTo(x(ser[ser.length-1].t), yp(0)); c.closePath();
+    c.globalAlpha=.45; c.fillStyle=pvc; c.fill(); c.globalAlpha=1;
+    // sınırlar
+    c.setLineDash([5,5]); c.strokeStyle=ink2;
+    [result.sand.tmax, result.tuse].forEach(function(v){ c.beginPath(); c.moveTo(pad.l,y(v)+.5); c.lineTo(W-pad.r,y(v)+.5); c.stroke(); });
+    c.setLineDash([]);
+    // sıcaklık
+    c.beginPath(); ser.forEach(function(p,i){ i?c.lineTo(x(p.t),y(p.T)):c.moveTo(x(p.t),y(p.T)); });
+    c.strokeStyle=acc; c.lineWidth=2.5; c.lineJoin="round"; c.stroke();
+    // hover
+    if(hoverIdx>=0 && ser[hoverIdx]){
+      var hp=ser[hoverIdx];
+      c.strokeStyle=ink; c.lineWidth=1; c.beginPath(); c.moveTo(x(hp.t)+.5,pad.t); c.lineTo(x(hp.t)+.5,pad.t+ih); c.stroke();
+      c.fillStyle=acc; c.beginPath(); c.arc(x(hp.t),y(hp.T),5,0,Math.PI*2); c.fill();
+    }
+    chart._geo={pad:pad,iw:iw,W:W};
+  }
+  function onPointer(ev){
+    if(!result || !chart._geo) return;
+    var rect=chart.getBoundingClientRect(), g=chart._geo;
+    var px=ev.clientX-rect.left, t=clamp((px-g.pad.l)/g.iw*72,0,72);
+    var ser=result.series, idx=Math.round(t/72*(ser.length-1));
+    hoverIdx=idx; drawChart();
+    var p=ser[idx], hh=p.t%24, hr=Math.floor(hh), mn=Math.round((hh-hr)*60);
+    tip.textContent = (Math.floor(p.t/24)+1)+". gün "+String(hr).padStart(2,"0")+":"+String(mn).padStart(2,"0")+"  "+nf0.format(p.T)+" °C  PV "+nf1.format(p.pv)+" kW";
+    var tx=clamp(px+14, 0, rect.width-tip.offsetWidth-4);
+    tip.style.left=tx+"px"; tip.style.top="18px"; tip.style.opacity="1";
+  }
+  chart.addEventListener("pointermove", onPointer);
+  chart.addEventListener("pointerdown", onPointer);
+  chart.addEventListener("pointerleave", function(){ hoverIdx=-1; tip.style.opacity="0"; drawChart(); });
+
+  /* ---------- hero tank ---------- */
+  var tank=$("tank"), tctx=tank.getContext("2d"), hourInput=$("hour"), hourOut=$("hourOut"), currentHour=0;
+  var heroRun = simulate({sand:1, month:1, kwp:4, vol:0.8, ins:20, dem:8});
+  var seed=7; function rnd(){ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; }
+  var TX=110, TY=60, TW=380, TH=380, RODS=[TX+TW*0.25, TX+TW*0.5, TX+TW*0.75];
+  var grains=[];
+  for(var gi=0; gi<1500; gi++){
+    var gx=TX+10+rnd()*(TW-20), gy=TY+40+rnd()*(TH-52);
+    var dmin=Math.min.apply(null, RODS.map(function(rx){ return Math.abs(gx-rx); }));
+    grains.push({x:gx, y:gy, r:2+rnd()*2.6, d:dmin, j:rnd()});
+  }
+  function heroAt(h){
+    var ser=heroRun.series, i=Math.round(clamp(h,0,24)/72*(ser.length-1)) + Math.round(24/72*(ser.length-1));
+    return ser[clamp(i,0,ser.length-1)];
+  }
+  function drawTank(h){
+    var dpr=window.devicePixelRatio||1;
+    if(tank.width!==600*dpr){ tank.width=600*dpr; tank.height=480*dpr; }
+    var c=tctx; c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,600,480);
+    var p=heroAt(h), pvFrac=p.pv/Math.max(0.01,heroRun.Ppk);
+    var ink2=css("--ink-2"), surface2=css("--surface-2"), ink=css("--ink");
+    // yalıtım
+    c.fillStyle=surface2; c.fillRect(TX-34,TY-6,TW+68,TH+40);
+    c.strokeStyle=ink2; c.lineWidth=1.5; c.strokeRect(TX-34+.5,TY-6+.5,TW+68,TH+40);
+    c.strokeRect(TX+.5,TY+30+.5,TW,TH-20);
+    // kum taneleri
+    for(var i=0;i<grains.length;i++){
+      var g=grains[i];
+      var local = p.T + pvFrac*220*Math.exp(-(g.d*g.d)/(2*28*28)) - g.j*8;
+      c.fillStyle=heat(local);
+      c.beginPath(); c.arc(g.x,g.y,g.r,0,Math.PI*2); c.fill();
+    }
+    // ısıtıcı çubuklar
+    RODS.forEach(function(rx){
+      c.fillStyle = pvFrac>0.02 ? heat(p.T+260*pvFrac) : ink2;
+      c.fillRect(rx-4, TY+8, 8, TH-40);
+    });
+    // serpantin
+    c.strokeStyle=ink; c.lineWidth=2; c.beginPath();
+    for(var k=0;k<6;k++){ var yy=TY+90+k*48; c.moveTo(TX+24,yy); c.lineTo(TX+TW-24,yy); }
+    c.globalAlpha=.35; c.stroke(); c.globalAlpha=1;
+    // etiketler
+    c.fillStyle=ink2; c.font='13px "Archivo", sans-serif'; c.textAlign="left";
+    c.fillText("PV", TX+TW*0.5-8, TY-14);
+    c.fillText("yalıtım", TX-30, TY+TH+56);
+    var hr=Math.floor(h)%24, mn=Math.round((h-Math.floor(h))*60)%60;
+    hourOut.textContent = String(hr).padStart(2,"0")+":"+String(mn).padStart(2,"0")+"  "+nf0.format(p.T)+" °C";
+  }
+  hourInput.addEventListener("input", function(){ stopPlay(); currentHour=num(hourInput,0,0,24); drawTank(currentHour); });
+
+  var raf=0, startTs=0;
+  function stopPlay(){ if(raf){ cancelAnimationFrame(raf); raf=0; } }
+  function play(ts){
+    if(!startTs) startTs=ts;
+    var f=Math.min(1,(ts-startTs)/9000);
+    currentHour = 16*(1-Math.pow(1-f,2)); // 00:00 -> 16:00
+    hourInput.value=String(Math.round(currentHour*4)/4);
+    drawTank(currentHour);
+    if(f<1) raf=requestAnimationFrame(play); else raf=0;
+  }
+
+  /* ---------- sand ranking ---------- */
+  var rank=$("rank"), selected=4;
+  var energies = SANDS.map(function(s){ return s.rho*s.cp*(s.tmax-50)/3600; }); // kWh per m3
+  var maxE=Math.max.apply(null,energies);
+  var order = SANDS.map(function(_,i){return i;}).sort(function(a,b){return energies[b]-energies[a];});
+  var rankBtns=[];
+  order.forEach(function(i){
+    var s=SANDS[i], li=el("li"), b=el("button");
+    b.type="button"; b.setAttribute("aria-pressed","false");
+    var row=el("span","row"); row.appendChild(el("span",null,s.name)); row.appendChild(el("span","val", nf0.format(energies[i])+" kWh/m³"));
+    var bar=el("span","bar"); bar.style.background=heat(120+ (energies[i]/maxE)*420); bar.style.transform="scaleX("+(energies[i]/maxE)+")";
+    b.appendChild(row); b.appendChild(bar);
+    b.addEventListener("click", function(){ selectSand(i); });
+    li.appendChild(b); rank.appendChild(li); rankBtns[i]=b;
+  });
+  function selectSand(i){
+    selected=i; var s=SANDS[i];
+    rankBtns.forEach(function(b,j){ b.setAttribute("aria-pressed", j===i ? "true":"false"); });
+    $("dName").textContent=s.name; $("dWhere").textContent=s.where;
+    $("dRho").textContent=nf0.format(s.rho)+" kg/m³";
+    $("dCp").textContent=nf2.format(s.cp)+" kJ/kg·K";
+    $("dK").textContent=nf2.format(s.k)+" W/m·K";
+    $("dTmax").textContent=nf0.format(s.tmax)+" °C";
+    $("dNote").textContent=s.note;
+  }
+  selectSand(order[0]);
+
+  /* ---------- cells ---------- */
+  var cells=$("cells");
+  SANDS.forEach(function(s,i){ var d=el("div",null,"K"+(i+1)); d.style.background=s.tone; if(i>=3) d.style.color="#F2F2F0"; cells.appendChild(d); });
+
+  /* ---------- gantt ---------- */
+  var scale=$("gScale");
+  for(var mth=1; mth<=24; mth++){ scale.appendChild(el("span",null, (mth===1||mth%6===0)? String(mth) : "")); }
+  var gantt=$("gantt");
+  WPS.forEach(function(w,i){
+    var row=el("div","g-row"), b=el("button"), pid="wp-"+i;
+    b.type="button"; b.setAttribute("aria-expanded","false"); b.setAttribute("aria-controls",pid);
+    var name=el("span","g-name",w.name); name.prepend(el("small",null,w.code+"  Ay "+w.s+"-"+w.e));
+    var track=el("span","g-track"); var bar=el("span","g-bar");
+    bar.style.gridColumn=w.s+" / "+(w.e+1); track.appendChild(bar);
+    b.appendChild(name); b.appendChild(track);
+    var panel=el("div","g-panel"); panel.id=pid; panel.hidden=true;
+    panel.appendChild(el("p",null,w.body));
+    var o=el("p"); o.appendChild(el("strong",null,"Çıktı: ")); o.appendChild(document.createTextNode(w.out)); panel.appendChild(o);
+    b.addEventListener("click", function(){
+      var open=b.getAttribute("aria-expanded")==="true";
+      b.setAttribute("aria-expanded", open?"false":"true"); panel.hidden=open;
+    });
+    row.appendChild(b); row.appendChild(panel); gantt.appendChild(row);
+  });
+
+  /* ---------- pil mi kum mu ---------- */
+  var VERDICTS = [
+    {t:"Lityum pil", b:"Işık, buzdolabı ve cihazlar elektrik ister. Isıdan elektriğe dönüş verimi düşük olduğu için kum bataryası burada uygun değil."},
+    {t:"Isı pompası (gerekirse küçük pil)", b:"İyi yalıtılmış, yerden ısıtmalı yeni binada ısı pompası aynı ısıyı yaklaşık üç kat daha az elektrikle üretir."},
+    {t:"Kum bataryası", b:"Radyatörlü eski binalar ve sıcak su yüksek sıcaklık ister. Kum bunu ucuz, yanmaz ve uzun ömürlü bir depoda sağlar; en gerçekçi ev çözümü küçük pil + kum hibritidir."},
+    {t:"Kum bataryası", b:"İnvertersiz, doğrudan PV ile çalışabilmesi şebekesiz yerlerde büyük avantaj. Sera, kümes ve ürün kurutma yüksek sıcaklıktan ve ucuz kapasiteden yararlanır."}
+  ];
+  var pickBtns = Array.prototype.slice.call(document.querySelectorAll("#pickOpts button"));
+  function pick(k){
+    pickBtns.forEach(function(b){ b.setAttribute("aria-pressed", b.getAttribute("data-k")===String(k) ? "true":"false"); });
+    $("vTitle").textContent = VERDICTS[k].t; $("vBody").textContent = VERDICTS[k].b;
+  }
+  pickBtns.forEach(function(b){ b.addEventListener("click", function(){ pick(clamp(parseInt(b.getAttribute("data-k"),10)||0,0,3)); }); });
+  pick(2);
+
+  var COSTS = [
+    {n:"PV + Li-ion pil + elektrikli ısıtıcı", d:"~4 kWp PV, 11 kWh pil", lo:5000, hi:10000},
+    {n:"PV + Li-ion pil + ısı pompası", d:"~1,5 kWp PV, 4 kWh pil, ısı pompası", lo:5000, hi:9500},
+    {n:"PV + kum bataryası", d:"~5 kWp PV, 0,3 m³ kum, inverter yok", lo:3500, hi:6500, sand:true}
+  ];
+  var costRows=$("costRows"), AXIS=10000;
+  COSTS.forEach(function(c){
+    var row=el("div","c-row"+(c.sand?" sand":"")), name=el("div","c-name",c.n);
+    name.appendChild(el("small",null,c.d));
+    var plot=el("div","c-plot"), rng=el("span","c-range"), lbl=el("span","c-lbl", nf0.format(c.lo)+"-"+nf0.format(c.hi)+" $");
+    rng.style.left=(c.lo/AXIS*100)+"%"; rng.style.width=((c.hi-c.lo)/AXIS*100)+"%";
+    lbl.style.left=(c.lo/AXIS*100)+"%";
+    plot.appendChild(rng); plot.appendChild(lbl);
+    row.appendChild(name); row.appendChild(plot); costRows.appendChild(row);
+  });
+
+  /* ---------- 500 C hesaplayıcı ---------- */
+  var cSel=$("cS");
+  SANDS.forEach(function(s,i){ var o=el("option",null,s.name); o.value=String(i); cSel.appendChild(o); });
+  cSel.value="1";
+  function kIns(Tm){ return 0.04 + 0.00012*Tm; }  // taş yünü, sıcaklıkla artan iletkenlik
+  function heatUp(p){
+    var s=SANDS[p.sand], m=MONTHS[p.month];
+    var C=s.rho*p.vol*s.cp*1000, r=Math.cbrt(p.vol/(2*Math.PI)), A=6*Math.PI*r*r;
+    var Ppk=p.kwp*m.psh*Math.PI/24*1000*ETA, T=m.amb, dt=300, Tpk=T, days=null;
+    for(var i=0;i<60*288;i++){
+      var h=(i*dt/3600)%24, pv=(h>=6&&h<18)?Ppk*Math.sin(Math.PI*(h-6)/12):0;
+      var UA=A/(p.ins/100/kIns((T+m.amb)/2)+0.12);
+      T+=(pv-UA*(T-m.amb))*dt/C;
+      if(T>Tpk) Tpk=T;
+      if(T>=p.target){ days=i*dt/86400; break; }
+    }
+    var UAt=A/(p.ins/100/kIns((p.target+m.amb)/2)+0.12);
+    return {days:days, Tpk:Tpk, E:C*(p.target-m.amb)/3.6e6, loss:UAt*(p.target-m.amb)*24/1000,
+            gain:p.kwp*m.psh*ETA, over:p.target>s.tmax, sand:s};
+  }
+  function calc(){
+    var mEl=document.querySelector('input[name="cm"]:checked');
+    var p={target:num($("cT"),500,200,600), vol:num($("cV"),0.3,0.04,1.5), ins:num($("cI"),30,5,40),
+           kwp:num($("cP"),3,0.4,10), sand:clamp(parseInt(cSel.value,10)||0,0,SANDS.length-1),
+           month:clamp(parseInt(mEl?mEl.value:"0",10)||0,0,MONTHS.length-1)};
+    $("cTOut").textContent=nf0.format(p.target)+" °C";
+    $("cVOut").textContent=nf2.format(p.vol)+" m³";
+    $("cIOut").textContent=nf0.format(p.ins)+" cm";
+    $("cPOut").textContent=nf1.format(p.kwp)+" kWp";
+    var r=heatUp(p);
+    if(r.days!==null){ $("cMainLbl").textContent="Hedefe ulaşma süresi"; setStat("cMain", r.days<1 ? "1 günden az" : nf1.format(r.days), r.days<1 ? "" : "gün"); }
+    else { $("cMainLbl").textContent="Hedefe ulaşma süresi"; setStat("cMain","Ulaşamaz",""); }
+    setStat("cEq", r.days!==null ? "≥ "+nf0.format(p.target) : nf0.format(r.Tpk), "°C");
+    setStat("cE", nf0.format(r.E), "kWh");
+    setStat("cLoss", nf1.format(r.loss), "kWh");
+    var msg="Günlük güneş girdisi yaklaşık "+nf1.format(r.gain)+" kWh, hedefte günlük kayıp "+nf1.format(r.loss)+" kWh. ";
+    if(r.over) msg+="Uyarı: "+r.sand.name+" için güvenli üst sıcaklık "+nf0.format(r.sand.tmax)+" °C. ";
+    if(r.days===null) msg+= r.loss>=r.gain ? "Kayıp, gelen enerjiyi aşıyor: yalıtımı kalınlaştırın veya PV gücünü artırın." : "Isınma çok yavaş: hacmi küçültün veya PV gücünü artırın.";
+    else if(r.days>10) msg+="Ulaşılıyor ama yavaş; m³ başına 8-10 kWp hedefleyin.";
+    else msg+="Bu tasarım hedef sıcaklığa makul sürede ulaşıyor.";
+    $("cSum").textContent=msg;
+  }
+  $("calcForm").addEventListener("input", calc);
+  $("calcForm").addEventListener("submit", function(e){ e.preventDefault(); });
+  calc();
+
+  /* ---------- ısı pompası vs kum, bina bina ---------- */
+  // Aynı model: scratchpad buildings.js ile MD'deki tablo üretildi.
+  function compareBuilding(b){
+    var PV_ETA=0.85, big=b.q>=200, etaS=big?0.85:0.75;
+    var pvDay=b.roof*b.psh*PV_ETA;
+    var eel=b.q/b.cop, solarElHP=Math.min(eel,pvDay);
+    var hp={solar:solarElHP*b.cop, grid:(eel-solarElHP), batt:solarElHP*b.night,
+            kw:Math.max(5,b.q/24*2.5), pvUsed:solarElHP/(b.psh*PV_ETA)};
+    hp.frac=hp.solar/b.q;
+    hp.cost=[hp.kw*500+hp.batt*300+hp.pvUsed*500, hp.kw*800+hp.batt*600+hp.pvUsed*900];
+    var solarS=Math.min(b.q,pvDay*etaS);
+    var sd={solar:solarS, grid:(b.q-solarS), store:solarS*b.night*1.2+solarS*0.2,
+            pvUsed:solarS/etaS/(b.psh*PV_ETA)};
+    sd.vol=sd.store/(1550*0.82*350/3600);
+    sd.frac=sd.solar/b.q;
+    var sc=big?[12,30]:[25,60];
+    sd.cost=[sd.store*sc[0]+sd.pvUsed*500, sd.store*sc[1]+sd.pvUsed*900];
+    return {hp:hp, sand:sd};
+  }
+  function money(a){ return nf0.format(Math.round(a[0]/100)*100)+"-"+nf0.format(Math.round(a[1]/100)*100); }
+  var bldPick=$("bldPick"), bldBtns=[];
+  BUILDINGS.forEach(function(b,i){
+    var btn=el("button",null,b.short); btn.type="button"; btn.setAttribute("aria-pressed","false");
+    btn.addEventListener("click", function(){ showBuilding(i); });
+    bldPick.appendChild(btn); bldBtns.push(btn);
+  });
+  function showBuilding(i){
+    var b=BUILDINGS[i], c=compareBuilding(b);
+    bldBtns.forEach(function(x,j){ x.setAttribute("aria-pressed", j===i?"true":"false"); });
+    $("bName").textContent=b.name;
+    $("bMeta").textContent="Ocak ısı ihtiyacı "+nf0.format(b.q)+" kWh/gün. "+b.emit+". Kullanılabilir PV "+nf1.format(b.roof)+" kWp, ısı pompası COP "+nf1.format(b.cop)+".";
+    setStat("hpFrac","%"+nf0.format(c.hp.frac*100),"");
+    setStat("hpGrid",nf1.format(c.hp.grid),"kWh/gün");
+    setStat("hpBatt",nf1.format(c.hp.batt),"kWh");
+    setStat("hpCost",money(c.hp.cost),"$");
+    setStat("sFrac","%"+nf0.format(c.sand.frac*100),"");
+    setStat("sGrid",nf1.format(c.sand.grid),"kWh/gün");
+    setStat("sVol",nf2.format(c.sand.vol),"m³");
+    setStat("sCost",money(c.sand.cost),"$");
+    $("colHP").classList.toggle("win", /^Isı pompası/.test(b.verdict));
+    $("colS").classList.toggle("win", /^Kum/.test(b.verdict));
+    $("bVerdict").textContent=b.verdict; $("bWhy").textContent=b.why;
+  }
+  showBuilding(2);
+
+  /* ---------- init ---------- */
+  applyBuilding();
+  update();
+  if(reduceMotion){ currentHour=14; hourInput.value="14"; drawTank(14); }
+  else { drawTank(0); raf=requestAnimationFrame(play); }
+  var rto=0;
+  window.addEventListener("resize", function(){ clearTimeout(rto); rto=setTimeout(drawChart,120); });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function(){ syncThemeBtn(); drawChart(); drawTank(currentHour); });
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ drawChart(); drawTank(currentHour); }); }
+})();
+</script>
+</body>
+</html>
